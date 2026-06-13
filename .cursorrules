@@ -1,0 +1,12 @@
+# Antigravity & AI Assistant Rules
+
+As an AI assistant (Antigravity) working on this repository, you must always adhere to the following workflow rules to ensure smooth collaboration:
+
+## 1. Always work from the latest commit
+- Before starting any task or proposing changes, you **must** fetch and pull the latest changes from the remote repository.
+- Run `git fetch --all` followed by `git pull` (or checkout `main` and pull) to sync your local environment.
+
+## 2. Always create a branch and open a Pull Request (PR)
+- Do **not** commit or push changes directly to the `main` branch.
+- Always create a new, descriptively named branch for any edits (e.g., `git checkout -b feature/some-feature` or `docs/update-info`).
+- After completing the work, push the branch to the remote repository and create a Pull Request (using `gh pr create` if the GitHub CLI is available).
