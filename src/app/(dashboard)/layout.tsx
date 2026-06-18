@@ -3,33 +3,61 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { LanguageProvider, useLanguage } from '../../context/LanguageContext';
 import { 
   Calendar, 
   ClipboardList, 
   User, 
   Menu, 
   X,
-  GraduationCap
+  GraduationCap,
+  Globe
 } from 'lucide-react';
 
 interface SidebarItem {
-  name: string;
+  nameKey: 'myEdPlan' | 'requirements' | 'myPage';
   path: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export default function DashboardLayout({
+function LanguageSwitcher() {
+  const { language, setLanguage } = useLanguage();
+
+  return (
+    <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200/50 shrink-0">
+      <button
+        onClick={() => setLanguage('ja')}
+        className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all duration-150 cursor-pointer ${
+          language === 'ja' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+        }`}
+      >
+        JP
+      </button>
+      <button
+        onClick={() => setLanguage('en')}
+        className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all duration-150 cursor-pointer ${
+          language === 'en' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  );
+}
+
+function DashboardLayoutContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const menuItems: SidebarItem[] = [
-    { name: 'My Ed Plan', path: '/edplan', icon: Calendar },
-    { name: '要件確認', path: '/requirements', icon: ClipboardList },
-    { name: 'マイページ', path: '/profile', icon: User },
+    { nameKey: 'myEdPlan', path: '/edplan', icon: Calendar },
+    { nameKey: 'requirements', path: '/requirements', icon: ClipboardList },
+    { nameKey: 'myPage', path: '/profile', icon: User },
   ];
 
   const toggleMobileSidebar = () => {
@@ -48,13 +76,18 @@ export default function DashboardLayout({
             Transfumer
           </span>
         </div>
-        <button
-          onClick={toggleMobileSidebar}
-          className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
-          aria-label="Toggle Menu"
-        >
-          {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
+        
+        {/* Mobile controls: switcher + menu toggle */}
+        <div className="flex items-center space-x-3">
+          <LanguageSwitcher />
+          <button
+            onClick={toggleMobileSidebar}
+            className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition"
+            aria-label="Toggle Menu"
+          >
+            {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile Drawer Overlay */}
@@ -89,7 +122,7 @@ export default function DashboardLayout({
 
             return (
               <Link
-                key={item.name}
+                key={item.nameKey}
                 href={item.path}
                 onClick={() => setIsMobileOpen(false)}
                 className={`
@@ -104,7 +137,7 @@ export default function DashboardLayout({
                   h-5 w-5 transition-colors duration-150
                   ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}
                 `} />
-                <span>{item.name}</span>
+                <span>{t(item.nameKey)}</span>
               </Link>
             );
           })}
@@ -118,10 +151,30 @@ export default function DashboardLayout({
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 md:h-screen md:overflow-y-auto z-10">
+        {/* Desktop Top Header Bar */}
+        <div className="hidden md:flex items-center justify-end px-8 py-4 bg-white border-b border-slate-100 sticky top-0 z-20">
+          <div className="flex items-center space-x-2">
+            <Globe className="h-4 w-4 text-slate-400" />
+            <LanguageSwitcher />
+          </div>
+        </div>
+
         <div className="flex-1 p-6 md:p-8">
           {children}
         </div>
       </main>
     </div>
+  );
+}
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <LanguageProvider>
+      <DashboardLayoutContent>{children}</DashboardLayoutContent>
+    </LanguageProvider>
   );
 }

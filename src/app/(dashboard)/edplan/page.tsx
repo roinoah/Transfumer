@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { mockRequirements, Course } from '../../../data/mockRequirements';
-import { Plus, Trash2, Calendar, LayoutGrid, CheckCircle } from 'lucide-react';
+import { useLanguage } from '../../../context/LanguageContext';
+import { Plus, Trash2, Calendar, LayoutGrid } from 'lucide-react';
 
 export default function EdPlanPage() {
+  const { t, language } = useLanguage();
+
   // Setup default term plans structure
   const defaultPlans: Record<string, Course[]> = {
     'Fall 2026': [],
@@ -53,7 +56,7 @@ export default function EdPlanPage() {
 
     if (selectedCourseIndex === 'custom') {
       if (!customCode || !customName) {
-        alert('科目コードと科目名を入力してください。');
+        alert(t('inputError'));
         return;
       }
       newCourse = {
@@ -75,7 +78,7 @@ export default function EdPlanPage() {
       // Avoid adding duplicate courses in the same term
       const alreadyExists = prev[term].some(c => c.code === newCourse.code);
       if (alreadyExists) {
-        alert(`${newCourse.code} は既にこの学期に登録されています。`);
+        alert(`${newCourse.code} ${t('duplicateWarning')}`);
         return prev;
       }
       return {
@@ -114,14 +117,16 @@ export default function EdPlanPage() {
       {/* Page Header */}
       <header className="pb-6 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">My Ed Plan</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{t('edplanTitle')}</h1>
           <p className="mt-2 text-sm text-slate-500">
-            各クォーター/セメスターに受講クラスを配置して、編入までの履修プランを作成・管理します。
+            {t('edplanSubtitle')}
           </p>
         </div>
         <div className="bg-white border border-slate-200/60 px-5 py-3 rounded-2xl shadow-sm text-center sm:text-right shrink-0">
-          <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400">登録済み総単位数</span>
-          <span className="text-2xl font-black text-blue-600">{calculateTotalUnits().toFixed(1)} <span className="text-sm font-semibold text-slate-500">Units</span></span>
+          <span className="block text-xs font-semibold uppercase tracking-wider text-slate-400">{t('registeredUnits')}</span>
+          <span className="text-2xl font-black text-blue-600">
+            {calculateTotalUnits().toFixed(1)} <span className="text-sm font-semibold text-slate-500">{t('unitsLabel')}</span>
+          </span>
         </div>
       </header>
 
@@ -142,7 +147,7 @@ export default function EdPlanPage() {
                   </h2>
                 </div>
                 <span className="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-lg">
-                  Total: {termUnits.toFixed(1)} Units
+                  {t('termTotal')}: {termUnits.toFixed(1)} {t('unitsLabel')}
                 </span>
               </div>
 
@@ -161,11 +166,11 @@ export default function EdPlanPage() {
                           </span>
                           {course.type === 'Required' ? (
                             <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 px-2 py-0.5 rounded-full">
-                              必須
+                              {t('required')}
                             </span>
                           ) : (
                             <span className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-full">
-                              推奨
+                              {t('recommended')}
                             </span>
                           )}
                         </div>
@@ -174,14 +179,14 @@ export default function EdPlanPage() {
                         </h3>
                       </div>
                       <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100/50 text-[11px] text-slate-500 font-semibold">
-                        <span>{course.units.toFixed(1)} Units</span>
+                        <span>{course.units.toFixed(1)} {t('unitsLabel')}</span>
                       </div>
                       
                       {/* Delete Trigger */}
                       <button
                         onClick={() => handleDeleteCourse(term, course.code)}
                         className="absolute top-3 right-3 text-slate-300 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-slate-100 opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
-                        aria-label="授業を削除"
+                        aria-label="Delete course"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -190,7 +195,7 @@ export default function EdPlanPage() {
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 border border-dashed border-slate-200 rounded-xl min-h-[180px]">
                     <LayoutGrid className="h-8 w-8 text-slate-300 mb-2" />
-                    <p className="text-xs font-medium">授業が登録されていません。</p>
+                    <p className="text-xs font-medium">{t('noCourses')}</p>
                   </div>
                 )}
               </div>
@@ -200,13 +205,13 @@ export default function EdPlanPage() {
                 {isAdding ? (
                   <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-3">
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">追加方法</label>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('addMethod')}</label>
                       <select
                         value={selectedCourseIndex}
                         onChange={(e) => setSelectedCourseIndex(e.target.value)}
                         className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
                       >
-                        <option value="custom">✍️ 手入力で追加</option>
+                        <option value="custom">✍️ {language === 'ja' ? '手入力で追加' : 'Add Custom Course'}</option>
                         {availableMockCourses.map((c, idx) => (
                           <option key={c.code} value={idx}>
                             📚 {c.code} - {c.name} ({c.units}U)
@@ -220,14 +225,14 @@ export default function EdPlanPage() {
                       <div className="space-y-2">
                         <input
                           type="text"
-                          placeholder="例: MATH 1A"
+                          placeholder={t('placeholderCode')}
                           value={customCode}
                           onChange={(e) => setCustomCode(e.target.value)}
                           className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                         <input
                           type="text"
-                          placeholder="例: Calculus I"
+                          placeholder={t('placeholderName')}
                           value={customName}
                           onChange={(e) => setCustomName(e.target.value)}
                           className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -251,8 +256,8 @@ export default function EdPlanPage() {
                             onChange={(e) => setCustomType(e.target.value as 'Required' | 'Recommended')}
                             className="w-1/2 text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none"
                           >
-                            <option value="Required">必須</option>
-                            <option value="Recommended">推奨</option>
+                            <option value="Required">{t('required')}</option>
+                            <option value="Recommended">{t('recommended')}</option>
                           </select>
                         </div>
                       </div>
@@ -263,13 +268,13 @@ export default function EdPlanPage() {
                         onClick={() => handleAddCourse(term)}
                         className="w-1/2 text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition cursor-pointer"
                       >
-                        追加
+                        {t('addBtn')}
                       </button>
                       <button
                         onClick={() => setActiveAddTerm(null)}
                         className="w-1/2 text-xs bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 font-semibold py-2 rounded-lg transition cursor-pointer"
                       >
-                        キャンセル
+                        {t('cancelBtn')}
                       </button>
                     </div>
                   </div>
@@ -279,7 +284,7 @@ export default function EdPlanPage() {
                     className="w-full py-2 border border-dashed border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="h-4 w-4" />
-                    <span>授業を追加</span>
+                    <span>{t('addCourse')}</span>
                   </button>
                 )}
               </div>
