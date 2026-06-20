@@ -1,8 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
-import pdf from 'pdf-parse';
-// @ts-ignore
+import { PDFParse } from 'pdf-parse';
 import { mockRequirements as existingRequirements } from '../src/data/mockRequirements';
 
 // Types to match src/data/mockRequirements.ts
@@ -47,7 +46,7 @@ function getNewPdfFiles(): string[] {
       }
     }
     return files;
-  } catch (error) {
+  } catch {
     console.error('Failed to query git status. Scanning ASSIST PDF directory instead.');
     if (!fs.existsSync(PDF_DIR)) return [];
     return fs.readdirSync(PDF_DIR)
@@ -221,7 +220,7 @@ function handleGitWorkflow(pdfPath: string, major: string) {
   console.log(`Checking out new branch: ${branchName}...`);
   try {
     execSync(`git checkout -b ${branchName}`, { stdio: 'inherit' });
-  } catch (error) {
+  } catch {
     console.error(`Branch ${branchName} already exists or checkout failed. Continuing...`);
   }
 
@@ -235,7 +234,7 @@ function handleGitWorkflow(pdfPath: string, major: string) {
   try {
     execSync(`git push -u origin ${branchName}`, { stdio: 'inherit' });
     console.log(`Successfully pushed to origin ${branchName}!`);
-  } catch (error) {
+  } catch {
     console.error('Failed to push to remote. Please push manually.');
   }
 }
@@ -273,8 +272,10 @@ async function main() {
     console.log(`\nProcessing ${path.basename(pdfPath)}...`);
     try {
       const dataBuffer = fs.readFileSync(pdfPath);
-      const parsedPdf = await pdf(dataBuffer);
-      const reqData = await parseAgreementWithLLM(parsedPdf.text);
+      const parser = new PDFParse({ data: dataBuffer });
+      const parsedPdfText = await parser.getText();
+      const reqData = await parseAgreementWithLLM(parsedPdfText.text);
+      await parser.destroy();
 
       console.log(`Successfully parsed major: "${reqData.major}" for university: "${reqData.toUniversity}"`);
       const key = `${reqData.fromCollege}|${reqData.toUniversity}|${reqData.major}`;
