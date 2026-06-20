@@ -90,6 +90,8 @@ export const translations = {
     univNameLabel: '志望大学名',
     majorNameLabel: '目標専攻名',
     selectFileBtn: 'ファイルを選択',
+    completeOneFrom: '以下のいずれか1つの講義を修了:',
+    orLabel: 'または',
     
     // Profile
     profileTitle: 'マイページ (My Page)',
@@ -181,6 +183,8 @@ export const translations = {
     univNameLabel: 'Target University Name',
     majorNameLabel: 'Target Major Name',
     selectFileBtn: 'Select File',
+    completeOneFrom: 'Complete 1 course from the following:',
+    orLabel: 'OR',
     
     // Profile
     profileTitle: 'My Page',

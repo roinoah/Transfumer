@@ -19,6 +19,9 @@ export default function RequirementsPage() {
   // Search state variable
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Selected option course codes for OR choice groups
+  const [selectedOrCourses, setSelectedOrCourses] = useState<Record<string, string>>({});
+
   // Custom requirements list state loaded from localStorage
   const [customRequirementsList, setCustomRequirementsList] = useState<TransferRequirement[]>([]);
 
@@ -204,20 +207,73 @@ export default function RequirementsPage() {
     });
   }, [combinedRequirement, searchQuery]);
 
+  // Group and sort courses for rendering (handling OR groups)
+  const renderedItems = useMemo(() => {
+    type RenderItem = 
+      | { type: 'single'; course: CombinedCourse; originalIndex: number }
+      | { type: 'group'; orGroup: string; courses: CombinedCourse[]; originalIndex: number };
+
+    const items: RenderItem[] = [];
+    const groupMap = new Map<string, CombinedCourse[]>();
+
+    filteredCourses.forEach(course => {
+      if (course.orGroup) {
+        if (!groupMap.has(course.orGroup)) {
+          groupMap.set(course.orGroup, []);
+        }
+        groupMap.get(course.orGroup)!.push(course);
+      } else {
+        items.push({ 
+          type: 'single', 
+          course, 
+          originalIndex: filteredCourses.indexOf(course) 
+        });
+      }
+    });
+
+    groupMap.forEach((courses, orGroup) => {
+      let minIndex = filteredCourses.length;
+      courses.forEach(c => {
+        const idx = filteredCourses.indexOf(c);
+        if (idx !== -1 && idx < minIndex) {
+          minIndex = idx;
+        }
+      });
+
+      items.push({ 
+        type: 'group', 
+        orGroup, 
+        courses, 
+        originalIndex: minIndex 
+      });
+    });
+
+    items.sort((a, b) => a.originalIndex - b.originalIndex);
+    return items;
+  }, [filteredCourses]);
+
   // Statistics calculations
   const stats = useMemo(() => {
     if (!combinedRequirement) return { total: 0, required: 0, recommended: 0 };
     const courses = combinedRequirement.courses;
     
-    const required = courses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
-    const recommended = courses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
+    // For courses belonging to an orGroup, only count the one that is currently selected (or default to the first one)
+    const countedCourses = courses.filter(course => {
+      if (!course.orGroup) return true;
+      const firstInGroupCode = courses.find(c => c.orGroup === course.orGroup)?.code;
+      const selectedCode = selectedOrCourses[course.orGroup] || firstInGroupCode;
+      return course.code === selectedCode;
+    });
+    
+    const required = countedCourses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
+    const recommended = countedCourses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
     
     return {
       total: required + recommended,
       required,
       recommended
     };
-  }, [combinedRequirement]);
+  }, [combinedRequirement, selectedOrCourses]);
 
   // Look up course in local catalog database
   const getCatalogCourse = (code: string) => {
@@ -543,79 +599,193 @@ export default function RequirementsPage() {
 
             {/* Courses List */}
             <div className="space-y-4">
-              {filteredCourses.length > 0 ? (
-                filteredCourses.map((course: CombinedCourse) => (
-                  <div 
-                    key={course.code}
-                    className={`group border p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300/60 transition-all duration-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
-                      course.isOverlap 
-                        ? 'bg-gradient-to-r from-indigo-50/40 to-blue-50/20 border-indigo-200/80 hover:border-indigo-300/80 shadow-indigo-50/10' 
-                        : 'bg-white border-slate-200/60'
-                    }`}
-                  >
-                    <div className="space-y-1.5 flex-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono font-bold text-slate-800 bg-slate-100/80 px-2.5 py-1 rounded-lg text-xs tracking-wider">
-                          {course.code}
-                        </span>
-                        
-                        {/* Required/Recommended badges */}
-                        {course.type === 'Required' ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/10">
-                            {t('required')}
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
-                            {t('recommended')}
-                          </span>
-                        )}
-
-                        {/* Overlap badge */}
-                        {course.isOverlap && (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm shadow-indigo-500/10">
-                            <Sparkles className="h-3 w-3" />
-                            <span>{t('doubleCounted')}</span>
-                          </span>
-                        )}
-                      </div>
-                      <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-base pt-1">
-                        {course.name}
-                      </h3>
-                      {/* Target requirements badges */}
-                      <div className="flex flex-wrap gap-1.5 pt-1.5">
-                        {course.sources?.map((src, sIdx) => {
-                          const isBerkeley = src.university.includes('Berkeley');
-                          return (
-                            <span 
-                              key={sIdx} 
-                              className={`inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded shadow-sm select-none ${
-                                isBerkeley 
-                                  ? 'bg-blue-50 text-blue-700 border border-blue-100/80' 
-                                  : 'bg-amber-50/80 text-amber-800 border border-amber-200/80'
-                              }`}
-                            >
-                              🏫 {src.university} ({src.major}) - {src.type === 'Required' ? t('required') : t('recommended')}
+              {renderedItems.length > 0 ? (
+                renderedItems.map((item) => {
+                  if (item.type === 'single') {
+                    const course = item.course;
+                    return (
+                      <div 
+                        key={course.code}
+                        className={`group border p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300/60 transition-all duration-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
+                          course.isOverlap 
+                            ? 'bg-gradient-to-r from-indigo-50/40 to-blue-50/20 border-indigo-200/80 hover:border-indigo-300/80 shadow-indigo-50/10' 
+                            : 'bg-white border-slate-200/60'
+                        }`}
+                      >
+                        <div className="space-y-1.5 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-mono font-bold text-slate-800 bg-slate-100/80 px-2.5 py-1 rounded-lg text-xs tracking-wider">
+                              {course.code}
                             </span>
-                          );
-                        })}
-                      </div>
-                      {course.description && (
-                        <p className="text-xs text-slate-400 pt-1 line-clamp-1 group-hover:line-clamp-none transition-all duration-300 leading-relaxed">
-                          {course.description}
-                        </p>
-                      )}
-                    </div>
+                            
+                            {/* Required/Recommended badges */}
+                            {course.type === 'Required' ? (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/10">
+                                {t('required')}
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                {t('recommended')}
+                              </span>
+                            )}
 
-                    <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-0 pt-3 sm:pt-0 border-slate-50 shrink-0">
-                      <span className="text-sm font-semibold text-slate-500">
-                        {course.units.toFixed(1)} {t('unitsLabel')}
-                      </span>
-                      <div className="h-6 w-6 rounded-full bg-slate-50 flex items-center justify-center text-slate-300">
-                        <CheckCircle className="h-5 w-5" />
+                            {/* Overlap badge */}
+                            {course.isOverlap && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm shadow-indigo-500/10">
+                                <Sparkles className="h-3 w-3" />
+                                <span>{t('doubleCounted')}</span>
+                              </span>
+                            )}
+                          </div>
+                          <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-base pt-1">
+                            {course.name}
+                          </h3>
+                          {/* Target requirements badges */}
+                          <div className="flex flex-wrap gap-1.5 pt-1.5">
+                            {course.sources?.map((src, sIdx) => {
+                              const isBerkeley = src.university.includes('Berkeley');
+                              return (
+                                <span 
+                                  key={sIdx} 
+                                  className={`inline-flex items-center text-[10px] font-bold px-2 py-0.5 rounded shadow-sm select-none ${
+                                    isBerkeley 
+                                      ? 'bg-blue-50 text-blue-700 border border-blue-100/80' 
+                                      : 'bg-amber-50/80 text-amber-800 border border-amber-200/80'
+                                  }`}
+                                >
+                                  🏫 {src.university} ({src.major}) - {src.type === 'Required' ? t('required') : t('recommended')}
+                                </span>
+                              );
+                            })}
+                          </div>
+                          {course.description && (
+                            <p className="text-xs text-slate-400 pt-1 line-clamp-1 group-hover:line-clamp-none transition-all duration-300 leading-relaxed">
+                              {course.description}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex items-center justify-between sm:justify-end gap-4 border-t sm:border-0 pt-3 sm:pt-0 border-slate-50 shrink-0">
+                          <span className="text-sm font-semibold text-slate-500">
+                            {course.units.toFixed(1)} {t('unitsLabel')}
+                          </span>
+                          <div className="h-6 w-6 rounded-full bg-slate-50 flex items-center justify-center text-slate-300">
+                            <CheckCircle className="h-5 w-5" />
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))
+                    );
+                  } else {
+                    // Group type: Render OR choice list
+                    const groupName = item.orGroup;
+                    const courses = item.courses;
+                    const selectedCode = selectedOrCourses[groupName] || courses[0]?.code;
+
+                    return (
+                      <div 
+                        key={groupName}
+                        className="bg-gradient-to-br from-slate-50/80 to-indigo-50/10 border border-dashed border-indigo-200/80 p-6 rounded-2xl shadow-sm space-y-4"
+                      >
+                        {/* Group Header */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="p-1 bg-indigo-100 text-indigo-700 rounded-lg">
+                              <Sparkles className="h-4 w-4 text-indigo-600" />
+                            </span>
+                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                              {t('completeOneFrom')}
+                            </span>
+                          </div>
+                          <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-[10px] font-bold text-indigo-600">
+                            {groupName}
+                          </span>
+                        </div>
+
+                        {/* List of subcourses */}
+                        <div className="space-y-2">
+                          {courses.map((course, idx) => {
+                            const isSelected = course.code === selectedCode;
+                            return (
+                              <div key={course.code} className="space-y-2">
+                                <div 
+                                  onClick={() => setSelectedOrCourses(prev => ({ ...prev, [groupName]: course.code }))}
+                                  className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 cursor-pointer transition-all duration-200 ${
+                                    isSelected 
+                                      ? 'bg-white border-indigo-500 shadow-md shadow-indigo-500/5 ring-1 ring-indigo-500' 
+                                      : 'bg-white/60 border-slate-200/70 opacity-60 hover:opacity-100 hover:border-slate-300'
+                                  }`}
+                                >
+                                  <div className="flex items-start gap-3 flex-1">
+                                    {/* Custom Radio Button on Left */}
+                                    <div className="pt-0.5 shrink-0">
+                                      <div className={`h-4.5 w-4.5 rounded-full border flex items-center justify-center transition-all ${
+                                        isSelected 
+                                          ? 'border-indigo-600 bg-indigo-50' 
+                                          : 'border-slate-300 bg-white'
+                                      }`}>
+                                        {isSelected && <div className="h-2 w-2 rounded-full bg-indigo-600" />}
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <span className="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-[10px] tracking-wider">
+                                          {course.code}
+                                        </span>
+                                        {course.type === 'Required' ? (
+                                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                                            {t('required')}
+                                          </span>
+                                        ) : (
+                                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                            {t('recommended')}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <h4 className={`font-bold text-sm transition-colors ${
+                                        isSelected ? 'text-indigo-900' : 'text-slate-700'
+                                      }`}>
+                                        {course.name}
+                                      </h4>
+                                      {course.description && (
+                                        <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-1 group-hover:line-clamp-none">
+                                          {course.description}
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                                    <span className="text-xs font-semibold text-slate-500">
+                                      {course.units.toFixed(1)} {t('unitsLabel')}
+                                    </span>
+                                    <div className={`h-5 w-5 rounded-full flex items-center justify-center transition-colors ${
+                                      isSelected ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-200'
+                                    }`}>
+                                      <CheckCircle className="h-4.5 w-4.5" />
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Divider OR */}
+                                {idx < courses.length - 1 && (
+                                  <div className="relative py-1 flex items-center justify-center">
+                                    <div className="absolute inset-0 flex items-center">
+                                      <div className="w-full border-t border-slate-200/50"></div>
+                                    </div>
+                                    <span className="relative px-2.5 py-0.5 text-[9px] font-bold text-indigo-500 bg-indigo-50 border border-indigo-100 rounded-full select-none shadow-sm uppercase tracking-wider">
+                                      {t('orLabel')}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+                })
               ) : (
                 <div className="bg-white border border-slate-200/60 p-10 rounded-2xl shadow-sm text-center">
                   <p className="text-slate-500 text-sm font-medium">{t('noMatches')}</p>
