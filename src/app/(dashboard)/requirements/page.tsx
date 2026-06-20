@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { mockRequirements, Course } from '../../../data/mockRequirements';
+import { mockRequirements, Course, TransferRequirement } from '../../../data/mockRequirements';
+import { deAnzaCatalog } from '../../../data/deAnzaCatalog';
 import { useLanguage } from '../../../context/LanguageContext';
-import { BookOpen, Search, CheckCircle, Info, Sparkles } from 'lucide-react';
+import { BookOpen, Search, CheckCircle, Info, Sparkles, Upload, X, FileText, Loader2 } from 'lucide-react';
 
 export default function RequirementsPage() {
   const { t, language } = useLanguage();
@@ -18,18 +19,52 @@ export default function RequirementsPage() {
   // Search state variable
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Custom requirements list state loaded from localStorage
+  const [customRequirementsList, setCustomRequirementsList] = useState<TransferRequirement[]>([]);
+
+  // PDF uploading and parsing states
+  const [isUploading, setIsUploading] = useState(false);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [parsedData, setParsedData] = useState<{
+    univ: string;
+    major: string;
+    courses: { code: string; name: string; units: number; type: 'Required' | 'Recommended'; description?: string; checked: boolean }[];
+  } | null>(null);
+
+  // Edit fields for confirmation modal
+  const [editUniv, setEditUniv] = useState('');
+  const [editMajor, setEditMajor] = useState('');
+
+  // Load custom requirements list from local storage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('transfumer_custom_requirements_list');
+    if (saved) {
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCustomRequirementsList(JSON.parse(saved));
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, []);
+
+  // Combine static and custom requirements list
+  const allRequirements = useMemo(() => {
+    return [...customRequirementsList, ...mockRequirements];
+  }, [customRequirementsList]);
+
   // Find unique colleges
-  const colleges = useMemo(() => Array.from(new Set(mockRequirements.map(r => r.fromCollege))), []);
+  const colleges = useMemo(() => Array.from(new Set(allRequirements.map(r => r.fromCollege))), [allRequirements]);
 
   // Available universities for the current college
   const availableUniversities = useMemo(() => {
-    const matchingReqs = mockRequirements.filter(r => r.fromCollege === selectedCollege);
+    const matchingReqs = allRequirements.filter(r => r.fromCollege === selectedCollege);
     return Array.from(new Set(matchingReqs.map(r => r.toUniversity)));
-  }, [selectedCollege]);
+  }, [selectedCollege, allRequirements]);
 
   // Get available majors for a specific university and selected college
   const getAvailableMajorsForUniv = (univ: string) => {
-    const matchingReqs = mockRequirements.filter(
+    const matchingReqs = allRequirements.filter(
       r => r.fromCollege === selectedCollege && r.toUniversity === univ
     );
     return Array.from(new Set(matchingReqs.map(r => r.major)));
@@ -37,19 +72,24 @@ export default function RequirementsPage() {
 
   // Reset selections when college changes
   useEffect(() => {
-    const matchingReqs = mockRequirements.filter(r => r.fromCollege === selectedCollege);
+    const matchingReqs = allRequirements.filter(r => r.fromCollege === selectedCollege);
     const availableUnivs = Array.from(new Set(matchingReqs.map(r => r.toUniversity)));
     
     const firstUniv = availableUnivs[0];
-    const firstUnivReqs = matchingReqs.filter(r => r.toUniversity === firstUniv);
-    const firstUnivMajors = Array.from(new Set(firstUnivReqs.map(r => r.major)));
-    
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedUnivs([firstUniv]);
-    setSelectedMajorsByUniv({
-      [firstUniv]: [firstUnivMajors[0]]
-    });
-  }, [selectedCollege]);
+    if (firstUniv) {
+      const firstUnivReqs = matchingReqs.filter(r => r.toUniversity === firstUniv);
+      const firstUnivMajors = Array.from(new Set(firstUnivReqs.map(r => r.major)));
+      
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedUnivs([firstUniv]);
+      setSelectedMajorsByUniv({
+        [firstUniv]: [firstUnivMajors[0] || '']
+      });
+    } else {
+      setSelectedUnivs([]);
+      setSelectedMajorsByUniv({});
+    }
+  }, [selectedCollege, allRequirements]);
 
   const toggleUniv = (univ: string) => {
     setSelectedUnivs(prev => {
@@ -97,7 +137,7 @@ export default function RequirementsPage() {
       return null;
     }
 
-    const matchingReqs = mockRequirements.filter(r => 
+    const matchingReqs = allRequirements.filter(r => 
       r.fromCollege === selectedCollege &&
       activePairs.some(pair => pair.university === r.toUniversity && pair.major === r.major)
     );
@@ -150,7 +190,7 @@ export default function RequirementsPage() {
       fromCollege: selectedCollege,
       courses
     };
-  }, [selectedCollege, selectedUnivs, selectedMajorsByUniv]);
+  }, [selectedCollege, selectedUnivs, selectedMajorsByUniv, allRequirements]);
 
   // Filter courses by search
   const filteredCourses = useMemo(() => {
@@ -178,6 +218,131 @@ export default function RequirementsPage() {
       recommended
     };
   }, [combinedRequirement]);
+
+  // Look up course in local catalog database
+  const getCatalogCourse = (code: string) => {
+    const normalizedCode = code.replace(/\s+/g, ' ').trim().toUpperCase();
+    for (const dept of Object.keys(deAnzaCatalog)) {
+      const match = deAnzaCatalog[dept].find(c => c.code.replace(/\s+/g, ' ').trim().toUpperCase() === normalizedCode);
+      if (match) return match;
+    }
+    return null;
+  };
+
+  // Handle PDF upload and text parser API request
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    setParseError(null);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/parse-pdf', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await res.json();
+      if (!result.isSuccessful) {
+        throw new Error(result.message || t('parseFail'));
+      }
+
+      const rawText = result.text || '';
+
+      // Regex matching community college course codes
+      const regex = /\b[A-Z]{2,4}\s+\d+[A-Z]{0,2}\b/g;
+      const matches = rawText.match(regex) || [];
+      const uniqueCodes: string[] = Array.from(new Set<string>(matches.map((c: string) => c.replace(/\s+/g, ' ').trim().toUpperCase())));
+
+      // Filter matches using catalog validation
+      const detected = uniqueCodes
+        .map((code: string) => getCatalogCourse(code))
+        .filter((c): c is NonNullable<typeof c> => c !== null)
+        .map(c => ({
+          code: c.code,
+          name: c.name,
+          units: c.units,
+          type: 'Required' as 'Required' | 'Recommended',
+          description: c.description,
+          checked: true
+        }));
+
+      // Guess university and major from text contents
+      let guessedUniv = 'UC Berkeley';
+      let guessedMajor = 'Computer Science';
+
+      const ucMatch = rawText.match(/University of California,\s*([A-Za-z\s]+)/i);
+      if (ucMatch && ucMatch[1]) {
+        guessedUniv = `UC ${ucMatch[1].trim()}`;
+      } else {
+        const csuMatch = rawText.match(/California State University,\s*([A-Za-z\s]+)/i);
+        if (csuMatch && csuMatch[1]) {
+          guessedUniv = `CSU ${csuMatch[1].trim()}`;
+        }
+      }
+
+      const majorMatch = rawText.match(/(?:Major|For):\s*([A-Za-z\s\(\),&\-]+)(?:\r?\n|$)/i);
+      if (majorMatch && majorMatch[1]) {
+        guessedMajor = majorMatch[1].trim().split('\n')[0].trim();
+      }
+
+      setEditUniv(guessedUniv);
+      setEditMajor(guessedMajor);
+      setParsedData({
+        univ: guessedUniv,
+        major: guessedMajor,
+        courses: detected
+      });
+    } catch (err: unknown) {
+      console.error(err);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      setParseError(errorMessage || t('parseFail'));
+    } finally {
+      setIsUploading(false);
+      e.target.value = '';
+    }
+  };
+
+  // Save parsed custom requirements locally
+  const handleSaveParsed = () => {
+    if (!parsedData) return;
+
+    const newReq = {
+      fromCollege: selectedCollege,
+      toUniversity: editUniv,
+      major: editMajor,
+      courses: parsedData.courses.filter(c => c.checked).map(c => ({
+        code: c.code,
+        name: c.name,
+        units: c.units,
+        type: c.type,
+        category: 'MajorPrep' as 'IGETC' | 'MajorPrep',
+        description: c.description
+      }))
+    };
+
+    const updatedList = [
+      ...customRequirementsList.filter(r => !(r.fromCollege === selectedCollege && r.toUniversity === editUniv && r.major === editMajor)),
+      newReq
+    ];
+
+    setCustomRequirementsList(updatedList);
+    localStorage.setItem('transfumer_custom_requirements_list', JSON.stringify(updatedList));
+
+    // Reset modals
+    setParsedData(null);
+
+    // Auto-select the newly added custom requirements
+    setSelectedUnivs(prev => Array.from(new Set([...prev, editUniv])));
+    setSelectedMajorsByUniv(prev => ({
+      ...prev,
+      [editUniv]: Array.from(new Set([...(prev[editUniv] || []), editMajor]))
+    }));
+  };
 
   return (
     <div className="max-w-5xl mx-auto w-full space-y-8 animate-fadeIn">
@@ -282,7 +447,79 @@ export default function RequirementsPage() {
             </div>
           );
         })}
+
+        {/* PDF Upload Section */}
+        <div className="border-t border-slate-100 pt-6">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+            {t('pdfUploadTitle')}
+          </label>
+          <div className="flex flex-col md:flex-row items-center gap-4 bg-slate-50 border border-dashed border-slate-200/80 p-5 rounded-2xl">
+            <div className="flex-1 space-y-1 text-center md:text-left">
+              <p className="text-xs font-bold text-slate-700">{t('pdfUploadTitle')}</p>
+              <p className="text-[10px] text-slate-400 leading-normal max-w-lg">{t('pdfUploadDesc')}</p>
+            </div>
+            
+            <div className="relative shrink-0">
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handlePdfUpload}
+                disabled={isUploading}
+                className="hidden"
+                id="pdf-upload-input"
+              />
+              <label
+                htmlFor="pdf-upload-input"
+                className={`inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-xs font-bold shadow-sm cursor-pointer transition-all ${
+                  isUploading 
+                    ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed' 
+                    : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:border-slate-300'
+                }`}
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <span>{t('parsingPdf')}</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-3.5 w-3.5 text-slate-500" />
+                    <span>{t('selectFileBtn')}</span>
+                  </>
+                )}
+              </label>
+            </div>
+          </div>
+          {parseError && (
+            <p className="text-[10px] font-semibold text-rose-500 mt-2 bg-rose-50 border border-rose-100/50 px-3 py-1.5 rounded-lg">
+              ⚠️ {parseError}
+            </p>
+          )}
+        </div>
       </section>
+
+      {/* Custom PDF Active Reset Banner */}
+      {customRequirementsList.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200/80 p-4 rounded-2xl flex items-center justify-between shadow-sm">
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="h-5 w-5 text-amber-600 animate-pulse" />
+            <div className="text-xs text-amber-800 font-semibold">
+              <span>{t('customPdfActive')} ({customRequirementsList.length} custom plans loaded)</span>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              if (confirm(language === 'ja' ? 'すべてのカスタムPDF要件を削除してデフォルトに戻しますか？' : 'Are you sure you want to delete all custom PDF requirements and reset to defaults?')) {
+                localStorage.removeItem('transfumer_custom_requirements_list');
+                setCustomRequirementsList([]);
+              }
+            }}
+            className="px-3 py-1 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-[10px] font-bold text-slate-600 transition shadow-sm cursor-pointer"
+          >
+            {t('clearCustomPdf')}
+          </button>
+        </div>
+      )}
 
       {/* Main Requirement Area */}
       {combinedRequirement && combinedRequirement.courses.length > 0 ? (
@@ -465,6 +702,113 @@ export default function RequirementsPage() {
           <p className="text-slate-400 text-xs">
             {language === 'ja' ? '選択した条件に合致する要件データがありません。' : 'No requirements found for the selected options.'}
           </p>
+        </div>
+      )}
+
+      {/* Parsed Preview Modal */}
+      {parsedData && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white border border-slate-200 rounded-2xl shadow-xl w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden animate-scaleIn">
+            {/* Modal Header */}
+            <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+              <h3 className="font-bold text-slate-800 text-sm flex items-center gap-1.5">
+                <FileText className="h-4 w-4 text-emerald-600" />
+                <span>{t('confirmParsedTitle')}</span>
+              </h3>
+              <button 
+                onClick={() => setParsedData(null)}
+                className="text-slate-400 hover:text-slate-600 transition"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-5 overflow-y-auto flex-1 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    {t('univNameLabel')}
+                  </label>
+                  <input
+                    type="text"
+                    value={editUniv}
+                    onChange={(e) => setEditUniv(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white transition"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    {t('majorNameLabel')}
+                  </label>
+                  <input
+                    type="text"
+                    value={editMajor}
+                    onChange={(e) => setEditMajor(e.target.value)}
+                    className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-800 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white transition"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">
+                  {t('detectedCourses')} ({parsedData.courses.length})
+                </label>
+                <div className="border border-slate-100 rounded-xl overflow-hidden divide-y divide-slate-100 max-h-[250px] overflow-y-auto">
+                  {parsedData.courses.map((course, idx) => (
+                    <div key={idx} className="p-2.5 flex items-center justify-between gap-3 text-xs bg-slate-50/30 hover:bg-slate-50/70 transition">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={course.checked}
+                          onChange={(e) => {
+                            const updated = [...parsedData.courses];
+                            updated[idx].checked = e.target.checked;
+                            setParsedData({ ...parsedData, courses: updated });
+                          }}
+                          className="rounded text-blue-600 focus:ring-blue-500 h-3.5 w-3.5 border-slate-300 cursor-pointer"
+                        />
+                        <span className="font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded text-[10px]">{course.code}</span>
+                        <span className="font-semibold text-slate-600 line-clamp-1">{course.name}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={course.type}
+                          onChange={(e) => {
+                            const updated = [...parsedData.courses];
+                            updated[idx].type = e.target.value as 'Required' | 'Recommended';
+                            setParsedData({ ...parsedData, courses: updated });
+                          }}
+                          className="px-1.5 py-0.5 border border-slate-200 bg-white rounded text-[10px] text-slate-600 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="Required">Required</option>
+                          <option value="Recommended">Recommended</option>
+                        </select>
+                        <span className="text-[10px] font-semibold text-slate-400 min-w-[30px] text-right">{course.units}U</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-slate-100 flex gap-2 justify-end bg-slate-50">
+              <button
+                onClick={() => setParsedData(null)}
+                className="px-4 py-2 border border-slate-200 text-slate-500 bg-white hover:bg-slate-50 rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
+              >
+                {t('cancelBtn')}
+              </button>
+              <button
+                onClick={handleSaveParsed}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm cursor-pointer"
+              >
+                {t('saveParsedBtn')}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
