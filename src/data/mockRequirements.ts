@@ -30,7 +30,6 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Differential Calculus.', isOverlap: true },
       { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Integral Calculus.', isOverlap: true },
       { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Vector spaces, matrices, and linear transforms.' },
-      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', description: 'Introduction to computer programming.' },
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Advanced structures and abstract data types.', orGroup: 'CS Data Structures Selection' },
       { code: 'CIS 26B', name: 'Advanced C Programming', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Advanced C programming concepts, structural programming, memory allocation and pointer arrays.', orGroup: 'CS Data Structures Selection' },
       { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
