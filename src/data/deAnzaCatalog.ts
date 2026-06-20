@@ -121,7 +121,10 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
     { code: "ECON 3", name: "Intermediate ECON I", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." },
     { code: "ECON 3H", name: "ECON 3H (Honors)", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." },
     { code: "ECON 4", name: "Intermediate ECON II", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." },
-    { code: "ECON 5", name: "ECON 5", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." }
+    { code: "ECON 5", name: "Principles of Microeconomics", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." }
+  ],
+  "Engineering (ENGR)": [
+    { code: "ENGR 37", name: "Introduction to Circuit Analysis", units: 5.0, description: "Introduction to circuit analysis, network theorems, and AC circuits." }
   ],
   "English as a Second Language (ESL)": [
     { code: "ESL 5", name: "English as a Second Language 5", units: 5.0, description: "Comprehensive study of key topics and concepts in English as a Second Language." },

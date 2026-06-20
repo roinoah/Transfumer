@@ -62,6 +62,7 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'PHYS 4A', name: 'Physics: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
       { code: 'PHYS 4B', name: 'Physics: Electricity & Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep' },
       { code: 'PHYS 4C', name: 'Physics: Fluids, Waves & Optics', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
       { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
