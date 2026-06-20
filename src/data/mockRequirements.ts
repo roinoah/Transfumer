@@ -28,6 +28,7 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', description: 'Introduction to computer programming.' },
       { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Object-oriented programming in C++.' },
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Advanced structures and abstract data types.' },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC', description: 'Expositing writing, reading and research.' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Argumentative writing and textual analysis.' },
       { code: 'PHIL 1', name: 'Introduction to Philosophy', units: 4.0, type: 'Recommended', category: 'IGETC', description: 'Survey of principal philosophical themes.' }
@@ -64,8 +65,8 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'PHYS 4C', name: 'Physics: Fluids, Waves & Optics', units: 6.0, type: 'Required', category: 'MajorPrep' },
       { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
-      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
-      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC' }
     ]
