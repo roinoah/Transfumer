@@ -435,6 +435,25 @@ export default function RequirementsPage() {
                 <p>・<span className="font-bold text-sky-800">{t('recommended')}</span>: {t('legendRecommended')}</p>
               </div>
             </div>
+
+            {/* Assist.org Verification Card */}
+            <div className="bg-emerald-50/40 border border-emerald-100/60 p-5 rounded-2xl flex gap-3">
+              <Sparkles className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+              <div className="text-xs text-emerald-800 leading-relaxed font-medium space-y-1">
+                <p className="font-bold text-emerald-950">{t('assistSourceTitle')}</p>
+                <p className="text-slate-500">{t('assistSourceDesc')}</p>
+                <div className="pt-1">
+                  <a 
+                    href="https://assist.org" 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="inline-flex items-center text-[10px] font-bold text-emerald-700 hover:text-emerald-950 hover:underline gap-0.5 bg-emerald-100/60 px-2 py-0.5 rounded transition-all"
+                  >
+                    Official ASSIST.org ↗
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (

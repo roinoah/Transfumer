@@ -75,6 +75,8 @@ export const translations = {
     legendRequired: '編入出願資格を得るために履修が必須の科目を表します。',
     legendRecommended: '必須ではありませんが、編入後の専攻学習や合格率向上のために推奨される科目です。',
     doubleCounted: '重複要件 (Double Counted)',
+    assistSourceTitle: 'Assist.org の公式情報に準拠',
+    assistSourceDesc: '表示されている要件データは、Assist.org に登録されている公式の編入合意書 (2025-2026年度) に基づいています。選択されたコミカレと志望大学の組み合わせに完全に対応しています。',
     
     // Profile
     profileTitle: 'マイページ (My Page)',
@@ -151,6 +153,8 @@ export const translations = {
     legendRequired: 'Courses required to be eligible for transfer.',
     legendRecommended: 'Recommended courses to prepare for upper-division classes and boost admissions chances.',
     doubleCounted: 'Double Counted',
+    assistSourceTitle: 'Sourced from ASSIST.org',
+    assistSourceDesc: 'These requirements are sourced from official ASSIST.org articulation agreements (2025-2026). The requirements change dynamically based on the current college and target university you select.',
     
     // Profile
     profileTitle: 'My Page',
