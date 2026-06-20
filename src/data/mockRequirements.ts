@@ -84,6 +84,7 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'BIOL 40C', name: 'Human Anatomy and Physiology', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MCELLBI 32 & 32L', name: 'Human Physiology' }, orGroup: 'EECS Science Elective' },
       { code: 'PHYS 4D', name: 'Physics for Scientists and Engineers: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7C', name: 'Physics for Scientists and Engineers' }, orGroup: 'EECS Science Elective' },
       { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Statewide common course for academic reading, composition, and research.' },
       { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
       { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
