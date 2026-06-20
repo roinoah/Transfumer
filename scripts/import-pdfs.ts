@@ -277,6 +277,17 @@ async function main() {
       const reqData = await parseAgreementWithLLM(parsedPdfText.text);
       await parser.destroy();
 
+      // Coerce common LLM naming mistakes
+      if (reqData && reqData.courses) {
+        reqData.courses = reqData.courses.map(c => {
+          let typeStr = c.type as string;
+          if (typeStr === 'Strongly Recommended') {
+            typeStr = 'Highly Recommended';
+          }
+          return { ...c, type: typeStr as 'Required' | 'Recommended' | 'Highly Recommended' };
+        });
+      }
+
       console.log(`Successfully parsed major: "${reqData.major}" for university: "${reqData.toUniversity}"`);
       const key = `${reqData.fromCollege}|${reqData.toUniversity}|${reqData.major}`;
       requirementsMap.set(key, reqData);
