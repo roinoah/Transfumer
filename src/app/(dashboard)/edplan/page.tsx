@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { mockRequirements, Course } from '../../../data/mockRequirements';
 import { deAnzaCatalog } from '../../../data/deAnzaCatalog';
+import { igetcData } from '../../../data/igetcData';
 import { useLanguage } from '../../../context/LanguageContext';
 import { Plus, Trash2, Calendar, LayoutGrid } from 'lucide-react';
 
@@ -56,7 +57,7 @@ export default function EdPlanPage() {
 
   // Modal / Dropdown state for adding a course
   const [activeAddTerm, setActiveAddTerm] = useState<string | null>(null);
-  const [addMethod, setAddMethod] = useState<'major' | 'catalog' | 'manual'>('major');
+  const [addMethod, setAddMethod] = useState<'major' | 'catalog' | 'calgetc' | 'manual'>('major');
   const [selectedCourseIndex, setSelectedCourseIndex] = useState<string>('0');
   
   // Catalog course form states
@@ -65,6 +66,11 @@ export default function EdPlanPage() {
     deAnzaCatalog[Object.keys(deAnzaCatalog)[0]]?.[0]?.code || ''
   );
   const [catalogType, setCatalogType] = useState<'Required' | 'Recommended'>('Required');
+
+  // Cal-GETC course form states
+  const [selectedCalgetcAreaId, setSelectedCalgetcAreaId] = useState<string>("Area 1");
+  const [selectedCalgetcCourseCode, setSelectedCalgetcCourseCode] = useState<string>("");
+  const [calgetType, setCalgetType] = useState<'Required' | 'Recommended'>('Required');
 
   // Custom course form states
   const [customCode, setCustomCode] = useState('');
@@ -92,6 +98,26 @@ export default function EdPlanPage() {
       localStorage.setItem('transfumer_plans', JSON.stringify(termPlans));
     }
   }, [termPlans, isLoaded]);
+
+  // Helper to resolve catalog course by code
+  const getCatalogCourseDetails = (code: string) => {
+    for (const courses of Object.values(deAnzaCatalog)) {
+      const match = courses.find(c => c.code.toUpperCase() === code.toUpperCase());
+      if (match) return match;
+    }
+    return null;
+  };
+
+  // Helper to get uncompleted Cal-GETC courses in an area
+  const getUncompletedCalgetcCourses = (areaId: string) => {
+    const plannedCodes = Object.values(termPlans)
+      .flatMap(courses => courses.map(c => c.code.toUpperCase()));
+    const area = igetcData.find(a => a.id === areaId);
+    if (!area) return [];
+    const allCourses = area.subAreas.flatMap(sub => sub.courses);
+    const unique = Array.from(new Set(allCourses));
+    return unique.filter(code => !plannedCodes.includes(code.toUpperCase()));
+  };
 
   // Aggregate list of all mock courses for dropdown selection
   const availableMockCourses = mockRequirements[0].courses; // De Anza to UC Berkeley CS default list
@@ -125,6 +151,24 @@ export default function EdPlanPage() {
         units: catalogCourse.units,
         type: catalogType,
         category: isStemOrBusiness ? 'MajorPrep' : 'IGETC',
+        description: catalogCourse.description
+      };
+    } else if (addMethod === 'calgetc') {
+      const uncompleted = getUncompletedCalgetcCourses(selectedCalgetcAreaId);
+      const currentVal = uncompleted.includes(selectedCalgetcCourseCode) 
+        ? selectedCalgetcCourseCode 
+        : (uncompleted[0] || '');
+      const catalogCourse = getCatalogCourseDetails(currentVal);
+      if (!catalogCourse) {
+        alert(language === 'ja' ? '有効なコースを選択してください。' : 'Please select a valid course.');
+        return;
+      }
+      newCourse = {
+        code: catalogCourse.code,
+        name: catalogCourse.name,
+        units: catalogCourse.units,
+        type: calgetType,
+        category: 'IGETC',
         description: catalogCourse.description
       };
     } else {
@@ -399,10 +443,15 @@ export default function EdPlanPage() {
                       <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('addMethod')}</label>
                       <select
                         value={addMethod}
-                        onChange={(e) => setAddMethod(e.target.value as 'major' | 'catalog' | 'manual')}
+                        onChange={(e) => {
+                          const val = e.target.value as 'major' | 'catalog' | 'calgetc' | 'manual';
+                          setAddMethod(val);
+                          setSelectedCalgetcCourseCode('');
+                        }}
                         className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
                       >
                         <option value="major">📚 {t('majorReqMethod')}</option>
+                        <option value="calgetc">🎓 {t('calgetcReqMethod')}</option>
                         <option value="catalog">🏫 {t('deAnzaCatalogMethod')}</option>
                         <option value="manual">✍️ {t('customAdd')}</option>
                       </select>
@@ -423,6 +472,93 @@ export default function EdPlanPage() {
                             </option>
                           ))}
                         </select>
+                      </div>
+                    )}
+
+                    {addMethod === 'calgetc' && (
+                      <div className="space-y-2.5">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('selectArea')}</label>
+                          <select
+                            value={selectedCalgetcAreaId}
+                            onChange={(e) => {
+                              const areaId = e.target.value;
+                              setSelectedCalgetcAreaId(areaId);
+                              setSelectedCalgetcCourseCode('');
+                            }}
+                            className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            {igetcData.map((area) => (
+                              <option key={area.id} value={area.id}>
+                                {language === 'ja' ? area.id.replace("Area", "エリア ") : area.id}: {language === 'ja' ? area.nameJa.split(': ')[1] || area.nameJa : area.nameEn.split(': ')[1] || area.nameEn}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('selectCourseLabel')}</label>
+                          {(() => {
+                            const uncompleted = getUncompletedCalgetcCourses(selectedCalgetcAreaId);
+                            if (uncompleted.length === 0) {
+                              return (
+                                <div className="text-xs text-emerald-600 bg-emerald-50 border border-emerald-100 p-2.5 rounded-lg font-bold flex items-center gap-1.5 shadow-sm">
+                                  <span>{t('allCompletedInArea')}</span>
+                                </div>
+                              );
+                            }
+                            const currentVal = uncompleted.includes(selectedCalgetcCourseCode)
+                              ? selectedCalgetcCourseCode
+                              : (uncompleted[0] || '');
+                            return (
+                              <select
+                                value={currentVal}
+                                onChange={(e) => setSelectedCalgetcCourseCode(e.target.value)}
+                                className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              >
+                                {uncompleted.map((code) => {
+                                  const details = getCatalogCourseDetails(code);
+                                  return (
+                                    <option key={code} value={code}>
+                                      {code} {details ? `- ${details.name} (${details.units}U)` : ''}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                            );
+                          })()}
+                        </div>
+
+                        {(() => {
+                          const uncompleted = getUncompletedCalgetcCourses(selectedCalgetcAreaId);
+                          if (uncompleted.length === 0) return null;
+                          const currentVal = uncompleted.includes(selectedCalgetcCourseCode)
+                            ? selectedCalgetcCourseCode
+                            : (uncompleted[0] || '');
+                          const course = getCatalogCourseDetails(currentVal);
+                          if (!course) return null;
+                          return (
+                            <div className="bg-white border border-slate-200/60 p-2.5 rounded-lg text-[10px] text-slate-500 space-y-1 shadow-sm">
+                              <div className="font-bold text-slate-700 flex justify-between">
+                                <span>{course.code}</span>
+                                <span className="text-blue-600 font-extrabold">{course.units} Units</span>
+                              </div>
+                              <p className="italic leading-normal text-slate-400 font-normal">{course.description}</p>
+                            </div>
+                          );
+                        })()}
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('courseType')}</label>
+                          <select
+                            value={calgetType}
+                            onChange={(e) => setCalgetType(e.target.value as 'Required' | 'Recommended')}
+                            className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            <option value="Required">{t('required')}</option>
+                            <option value="Recommended">{t('recommended')}</option>
+                          </select>
+                        </div>
                       </div>
                     )}
 
@@ -554,7 +690,10 @@ export default function EdPlanPage() {
                   </div>
                 ) : (
                   <button
-                    onClick={() => setActiveAddTerm(term)}
+                    onClick={() => {
+                      setActiveAddTerm(term);
+                      setSelectedCalgetcCourseCode('');
+                    }}
                     className="w-full py-2 border border-dashed border-slate-200 hover:border-slate-300 hover:bg-slate-50/50 rounded-xl text-xs font-semibold text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Plus className="h-4 w-4" />
