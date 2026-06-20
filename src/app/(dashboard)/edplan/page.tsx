@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { mockRequirements, Course } from '../../../data/mockRequirements';
+import { deAnzaCatalog } from '../../../data/deAnzaCatalog';
 import { useLanguage } from '../../../context/LanguageContext';
 import { Plus, Trash2, Calendar, LayoutGrid } from 'lucide-react';
 
@@ -20,8 +21,16 @@ export default function EdPlanPage() {
 
   // Modal / Dropdown state for adding a course
   const [activeAddTerm, setActiveAddTerm] = useState<string | null>(null);
-  const [selectedCourseIndex, setSelectedCourseIndex] = useState<string>('custom');
+  const [addMethod, setAddMethod] = useState<'major' | 'catalog' | 'manual'>('major');
+  const [selectedCourseIndex, setSelectedCourseIndex] = useState<string>('0');
   
+  // Catalog course form states
+  const [selectedDept, setSelectedDept] = useState<string>(Object.keys(deAnzaCatalog)[0]);
+  const [selectedCatalogCourseCode, setSelectedCatalogCourseCode] = useState<string>(
+    deAnzaCatalog[Object.keys(deAnzaCatalog)[0]]?.[0]?.code || ''
+  );
+  const [catalogType, setCatalogType] = useState<'Required' | 'Recommended'>('Required');
+
   // Custom course form states
   const [customCode, setCustomCode] = useState('');
   const [customName, setCustomName] = useState('');
@@ -33,6 +42,7 @@ export default function EdPlanPage() {
     const saved = localStorage.getItem('transfumer_plans');
     if (saved) {
       try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTermPlans(JSON.parse(saved));
       } catch (e) {
         console.error('Failed to parse saved plans from localStorage', e);
@@ -54,7 +64,7 @@ export default function EdPlanPage() {
   const handleAddCourse = (term: string) => {
     let newCourse: Course;
 
-    if (selectedCourseIndex === 'custom') {
+    if (addMethod === 'manual') {
       if (!customCode || !customName) {
         alert(t('inputError'));
         return;
@@ -66,9 +76,30 @@ export default function EdPlanPage() {
         type: customType,
         category: 'MajorPrep'
       };
+    } else if (addMethod === 'catalog') {
+      const deptCourses = deAnzaCatalog[selectedDept] || [];
+      const catalogCourse = deptCourses.find(c => c.code === selectedCatalogCourseCode);
+      if (!catalogCourse) {
+        alert(language === 'ja' ? '有効なコースを選択してください。' : 'Please select a valid course.');
+        return;
+      }
+      const isStemOrBusiness = /MATH|CIS|PHYS|CHEM|ECON|BUS|ACCT/i.test(selectedDept);
+      newCourse = {
+        code: catalogCourse.code,
+        name: catalogCourse.name,
+        units: catalogCourse.units,
+        type: catalogType,
+        category: isStemOrBusiness ? 'MajorPrep' : 'IGETC',
+        description: catalogCourse.description
+      };
     } else {
+      // addMethod === 'major'
       const selectedIndex = parseInt(selectedCourseIndex, 10);
       const mockCourse = availableMockCourses[selectedIndex];
+      if (!mockCourse) {
+        alert(language === 'ja' ? '有効なコースを選択してください。' : 'Please select a valid course.');
+        return;
+      }
       newCourse = {
         ...mockCourse
       };
@@ -92,7 +123,7 @@ export default function EdPlanPage() {
     setCustomName('');
     setCustomUnits('4.0');
     setCustomType('Required');
-    setSelectedCourseIndex('custom');
+    setSelectedCourseIndex('0');
     setActiveAddTerm(null);
   };
 
@@ -207,21 +238,104 @@ export default function EdPlanPage() {
                     <div>
                       <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('addMethod')}</label>
                       <select
-                        value={selectedCourseIndex}
-                        onChange={(e) => setSelectedCourseIndex(e.target.value)}
+                        value={addMethod}
+                        onChange={(e) => setAddMethod(e.target.value as 'major' | 'catalog' | 'manual')}
                         className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
                       >
-                        <option value="custom">✍️ {language === 'ja' ? '手入力で追加' : 'Add Custom Course'}</option>
-                        {availableMockCourses.map((c, idx) => (
-                          <option key={c.code} value={idx}>
-                            📚 {c.code} - {c.name} ({c.units}U)
-                          </option>
-                        ))}
+                        <option value="major">📚 {t('majorReqMethod')}</option>
+                        <option value="catalog">🏫 {t('deAnzaCatalogMethod')}</option>
+                        <option value="manual">✍️ {t('customAdd')}</option>
                       </select>
                     </div>
 
-                    {/* Conditional manual input fields */}
-                    {selectedCourseIndex === 'custom' && (
+                    {/* Conditional input fields depending on method */}
+                    {addMethod === 'major' && (
+                      <div>
+                        <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('selectCourseLabel')}</label>
+                        <select
+                          value={selectedCourseIndex}
+                          onChange={(e) => setSelectedCourseIndex(e.target.value)}
+                          className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        >
+                          {availableMockCourses.map((c, idx) => (
+                            <option key={c.code} value={idx}>
+                              {c.code} - {c.name} ({c.units}U)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    {addMethod === 'catalog' && (
+                      <div className="space-y-2.5">
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('selectDepartment')}</label>
+                          <select
+                            value={selectedDept}
+                            onChange={(e) => {
+                              const dept = e.target.value;
+                              setSelectedDept(dept);
+                              const courses = deAnzaCatalog[dept] || [];
+                              setSelectedCatalogCourseCode(courses[0]?.code || '');
+                            }}
+                            className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            {Object.keys(deAnzaCatalog).map((dept) => (
+                              <option key={dept} value={dept}>
+                                {dept}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('selectCourseLabel')}</label>
+                          <select
+                            value={selectedCatalogCourseCode}
+                            onChange={(e) => setSelectedCatalogCourseCode(e.target.value)}
+                            className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            {(deAnzaCatalog[selectedDept] || []).map((c) => (
+                              <option key={c.code} value={c.code}>
+                                {c.code} - {c.name} ({c.units}U)
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {selectedCatalogCourseCode && (
+                          <div className="bg-white border border-slate-200/60 p-2.5 rounded-lg text-[10px] text-slate-500 space-y-1 shadow-sm">
+                            {(() => {
+                              const course = (deAnzaCatalog[selectedDept] || []).find(c => c.code === selectedCatalogCourseCode);
+                              if (!course) return null;
+                              return (
+                                <>
+                                  <div className="font-bold text-slate-700 flex justify-between">
+                                    <span>{course.code}</span>
+                                    <span className="text-blue-600 font-extrabold">{course.units} Units</span>
+                                  </div>
+                                  <p className="italic leading-normal text-slate-400 font-normal">{course.description}</p>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">{t('courseType')}</label>
+                          <select
+                            value={catalogType}
+                            onChange={(e) => setCatalogType(e.target.value as 'Required' | 'Recommended')}
+                            className="w-full text-xs bg-white border border-slate-200 p-2 rounded-lg text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          >
+                            <option value="Required">{t('required')}</option>
+                            <option value="Recommended">{t('recommended')}</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
+                    {addMethod === 'manual' && (
                       <div className="space-y-2">
                         <input
                           type="text"

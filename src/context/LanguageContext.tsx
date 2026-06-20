@@ -20,6 +20,11 @@ export const translations = {
     addCourse: '授業を追加',
     addMethod: '追加方法',
     customAdd: '✍️ 手入力で追加',
+    majorReqMethod: '志望専攻の推奨科目から選択',
+    deAnzaCatalogMethod: 'De Anza College カタログから選択',
+    selectDepartment: '分野 (Department) を選択',
+    selectCourseLabel: '授業 (Course) を選択',
+    courseType: '区分 (Type)',
     addBtn: '追加',
     cancelBtn: 'キャンセル',
     placeholderCode: '例: MATH 1A',
@@ -73,6 +78,11 @@ export const translations = {
     addCourse: 'Add Course',
     addMethod: 'Method',
     customAdd: '✍️ Add Custom Course',
+    majorReqMethod: 'Select from Target Major Requirements',
+    deAnzaCatalogMethod: 'Select from De Anza College Catalog',
+    selectDepartment: 'Select Department',
+    selectCourseLabel: 'Select Course',
+    courseType: 'Type',
     addBtn: 'Add',
     cancelBtn: 'Cancel',
     placeholderCode: 'e.g. MATH 1A',
@@ -128,6 +138,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const saved = localStorage.getItem('transfumer_language') as Language;
     if (saved === 'ja' || saved === 'en') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLanguageState(saved);
     }
   }, []);
