@@ -1039,6 +1039,24 @@ export default function RequirementsPage() {
                                               {option.course.description}
                                             </p>
                                           )}
+                                          {/* Target requirements badges */}
+                                          <div className="flex flex-wrap gap-1 pt-1.5">
+                                            {option.course.sources?.map((src, sIdx) => {
+                                              const isBerkeley = src.university.includes('Berkeley');
+                                              return (
+                                                <span 
+                                                  key={sIdx} 
+                                                  className={`inline-flex items-center text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm select-none ${
+                                                    isBerkeley 
+                                                      ? 'bg-blue-50 text-blue-700 border border-blue-100/80' 
+                                                      : 'bg-amber-50/80 text-amber-800 border border-amber-200/80'
+                                                  }`}
+                                                >
+                                                  🏫 {src.university} ({src.major})
+                                                </span>
+                                              );
+                                            })}
+                                          </div>
                                         </div>
                                       )}
 
@@ -1064,6 +1082,24 @@ export default function RequirementsPage() {
                                                         {subC.code}
                                                       </span>
                                                       <span className="font-semibold text-slate-600">{subC.name}</span>
+                                                    </div>
+                                                    {/* Target requirements badges */}
+                                                    <div className="flex flex-wrap gap-1 pt-1">
+                                                      {subC.sources?.map((src, sIdx) => {
+                                                        const isBerkeley = src.university.includes('Berkeley');
+                                                        return (
+                                                          <span 
+                                                            key={sIdx} 
+                                                            className={`inline-flex items-center text-[8px] font-bold px-1 py-0.2 rounded shadow-sm select-none ${
+                                                              isBerkeley 
+                                                                ? 'bg-blue-50 text-blue-700 border border-blue-100/50' 
+                                                                : 'bg-amber-50/80 text-amber-800 border border-amber-200/80'
+                                                            }`}
+                                                          >
+                                                            🏫 {src.university} ({src.major})
+                                                          </span>
+                                                        );
+                                                      })}
                                                     </div>
                                                   </div>
                                                   <span className="text-[10px] text-slate-400 font-bold shrink-0">{subC.units.toFixed(1)}U</span>
