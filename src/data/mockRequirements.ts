@@ -765,5 +765,48 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'ECON 1H', name: 'Principles of Macroeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Political Economy Macro/Micro Economics Requirement', satisfies: { code: 'ECON 1', name: 'Principles of Macroeconomics' } },
       { code: 'ECON 2H', name: 'Principles of Microeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Political Economy Macro/Micro Economics Requirement', satisfies: { code: 'ECON 2', name: 'Principles of Microeconomics' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'University of California, Berkeley',
+    major: 'Chemical Engineering',
+    courses: [
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Regular Series', satisfies: { code: 'CHEM 1A', name: 'General Chemistry' } },
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Regular Series', satisfies: { code: 'CHEM 1AL', name: 'General Chemistry Laboratory' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Regular Series', satisfies: { code: 'CHEM 1B', name: 'General Chemistry' } },
+      { code: 'CHEM 1AH', name: 'General Chemistry I - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Honors Series', satisfies: { code: 'CHEM 1A', name: 'General Chemistry' } },
+      { code: 'CHEM 1BH', name: 'General Chemistry II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Honors Series', satisfies: { code: 'CHEM 1AL', name: 'General Chemistry Laboratory' } },
+      { code: 'CHEM 1CH', name: 'General Chemistry III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Honors Series', satisfies: { code: 'CHEM 1B', name: 'General Chemistry' } },
+      { code: 'CHEM 3A', name: 'Chemical Structure and Reactivity', units: 3.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 12A', name: 'Organic Chemistry I' } },
+      { code: 'CHEM 3AL', name: 'Organic Chemistry Laboratory', units: 2.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 12A', name: 'Organic Chemistry I' } },
+      { code: 'CHEM 3B', name: 'Chemical Structure and Reactivity', units: 3.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 12B', name: 'Organic Chemistry II' } },
+      { code: 'CHEM 3BL', name: 'Organic Chemistry Laboratory', units: 2.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 12B', name: 'Organic Chemistry II' } },
+      { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Biology Series', satisfies: { code: 'BIOLOGY 1A', name: 'General Biology Lecture' } },
+      { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Biology Series', satisfies: { code: 'BIOLOGY 1A', name: 'General Biology Lecture' } },
+      { code: 'BIOL 6AH', name: 'Form and Function in the Biological World - HONORS', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Biology Series', satisfies: { code: 'BIOLOGY 1A', name: 'General Biology Lecture' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus I Regular Series', satisfies: { code: 'MATH 51', name: 'Calculus I' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus I Regular Series', satisfies: { code: 'MATH 51', name: 'Calculus I' } },
+      { code: 'MATH 1AH', name: 'Calculus I - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus I Honors Series', satisfies: { code: 'MATH 51', name: 'Calculus I' } },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus I Honors Series', satisfies: { code: 'MATH 51', name: 'Calculus I' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus II Regular Series', satisfies: { code: 'MATH 52', name: 'Calculus II' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus II Regular Series', satisfies: { code: 'MATH 52', name: 'Calculus II' } },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus II Honors Series', satisfies: { code: 'MATH 52', name: 'Calculus II' } },
+      { code: 'MATH 1CH', name: 'Calculus III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus II Honors Series', satisfies: { code: 'MATH 52', name: 'Calculus II' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Multivariable Calculus Regular Series', satisfies: { code: 'MATH 53', name: 'Multivariable Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Multivariable Calculus Regular Series', satisfies: { code: 'MATH 53', name: 'Multivariable Calculus' } },
+      { code: 'MATH 1CH', name: 'Calculus III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Multivariable Calculus Honors Series', satisfies: { code: 'MATH 53', name: 'Multivariable Calculus' } },
+      { code: 'MATH 1DH', name: 'Calculus IV - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Multivariable Calculus Honors Series', satisfies: { code: 'MATH 53', name: 'Multivariable Calculus' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Linear Algebra & Diff Eq Regular Series', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Linear Algebra & Diff Eq Regular Series', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' } },
+      { code: 'MATH 2AH', name: 'Differential Equations - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Linear Algebra & Diff Eq Honors Series', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' } },
+      { code: 'MATH 2BH', name: 'Linear Algebra - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Linear Algebra & Diff Eq Honors Series', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7A', name: 'Physics for Scientists and Engineers' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7B', name: 'Physics for Scientists and Engineers' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7B', name: 'Physics for Scientists and Engineers' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Courses that satisfy Reading & Composition A', orGroup: 'R&C Requirement', satisfies: { code: 'READING & COMPOSITION A', name: 'Reading & Composition A' } },
+      { code: 'ENGL C1000H', name: 'Academic Reading and Writing - HONORS', units: 5.0, type: 'Required', category: 'IGETC', description: 'Courses that satisfy Reading & Composition A', orGroup: 'R&C Requirement', satisfies: { code: 'READING & COMPOSITION A', name: 'Reading & Composition A' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'IGETC', description: 'Courses that satisfy Reading & Composition A', orGroup: 'R&C Requirement', satisfies: { code: 'READING & COMPOSITION A', name: 'Reading & Composition A' } }
+    ]
   }
 ];
