@@ -139,6 +139,24 @@ export const mockRequirements: TransferRequirement[] = [
   {
     fromCollege: 'De Anza College',
     toUniversity: 'UC Berkeley',
+    major: 'Statistics',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Differential Calculus.', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Integral Calculus.', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Infinite series, vectors, vector-valued functions, multivariable calculus.' },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Vector calculus and series.', satisfies: { code: 'MATH 53', name: 'Multivariable Calculus' }, orGroup: 'Statistics Core Selection' },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Ordinary differential equations.', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' }, orGroup: 'Statistics Core Selection' },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Vector spaces, matrices, and linear transforms.', satisfies: { code: 'MATH 54', name: 'Linear Algebra and Differential Equations' }, orGroup: 'Statistics Core Selection' },
+      { code: 'CIS 11', name: 'Foundations of Data Science for All', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Introduction to data science: computation, statistics, and visualization.' },
+      { code: 'STAT C1000', name: 'Introduction to Statistics', units: 5.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'Statewide common course for introductory statistics and data analysis.', satisfies: { code: 'STAT 2', name: 'Introduction to Statistics' }, orGroup: 'Statistics STAT 2 Selection' },
+      { code: 'MATH 17', name: 'Integrated Statistics 2', units: 5.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'Statewide common course for integrated statistics.', satisfies: { code: 'STAT 2', name: 'Introduction to Statistics' }, orGroup: 'Statistics STAT 2 Selection' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Berkeley',
     major: 'Economics',
     courses: [
       { code: 'ECON 1A', name: 'Principles of Macroeconomics', units: 5.0, type: 'Required', category: 'MajorPrep' },
