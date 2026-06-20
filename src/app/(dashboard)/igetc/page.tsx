@@ -53,30 +53,65 @@ export default function IgetcPage() {
 
   // Calculate detailed progress stats
   const getProgressStats = () => {
-    const totalSubAreas = 9;
+    const totalSubAreas = 11;
     let satisfiedCount = 0;
-    
+
+    // Helper to find a sub-area by ID
+    const findSubArea = (areaId: string, subAreaId: string) => {
+      const area = igetcData.find(a => a.id === areaId);
+      return area?.subAreas.find(s => s.id === subAreaId);
+    };
+
     // Area 1
-    if (isCoursePlanned("EWRT 1A")) satisfiedCount++; // 1A
-    if (["EWRT 2", "PHIL 3", "PHIL 4"].some(c => isCoursePlanned(c))) satisfiedCount++; // 1B
-    
+    const sub1A = findSubArea("Area 1", "1A");
+    const sub1B = findSubArea("Area 1", "1B");
+    const sub1C = findSubArea("Area 1", "1C");
+    if (sub1A?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+    if (sub1B?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+    if (sub1C?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+
     // Area 2
-    if (["MATH 1A", "MATH 1B", "MATH 1C", "MATH 1D", "MATH 10", "MATH 22"].some(c => isCoursePlanned(c))) satisfiedCount++; // 2A
-    
+    const sub2A = findSubArea("Area 2", "2A");
+    if (sub2A?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+
     // Area 3
-    const has3A = ["ARTS 1A", "ARTS 1B", "ARTS 2A", "MUSI 1A", "MUSI 8"].some(c => isCoursePlanned(c));
-    const has3B = ["PHIL 1", "PHIL 2", "HIST 3A", "HIST 3B", "HIST 17A", "HIST 17B", "HIST 17C", "HUMI 1", "HUMI 2"].some(c => isCoursePlanned(c));
-    if (has3A) satisfiedCount++;
-    if (has3B) satisfiedCount++;
-    
+    const sub3A = findSubArea("Area 3", "3A");
+    const sub3B = findSubArea("Area 3", "3B");
+    if (sub3A?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+    if (sub3B?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
+
     // Area 4
-    const area4Count = ["ECON 1A", "ECON 1B", "POLI 1", "POLI 2", "PSYC 1", "PSYC 2", "PSYC 4", "SOC 1", "SOC 5", "SOC 15", "ANTH 2", "ANTH 3", "GEO 2"].filter(c => isCoursePlanned(c)).length;
-    if (area4Count >= 2) satisfiedCount++;
-    
+    const sub4 = findSubArea("Area 4", "4");
+    if (sub4) {
+      const planned = sub4.courses.filter(c => isCoursePlanned(c));
+      const disciplines = new Set(planned.map(c => c.split(" ")[0]));
+      if (planned.length >= 2 && disciplines.size >= 2) {
+        satisfiedCount++;
+      }
+    }
+
     // Area 5
-    if (["PHYS 2A", "PHYS 4A", "PHYS 4B", "PHYS 4C", "PHYS 4D", "CHEM 1A", "CHEM 1B", "CHEM 1C", "CHEM 25", "ASTR 4", "ASTR 10", "GEO 1"].some(c => isCoursePlanned(c))) satisfiedCount++; // 5A
-    if (["BIOL 6A", "BIOL 6B", "BIOL 6C", "BIOL 10", "BIOL 40A", "BIOL 40B", "BIOL 40C", "ANTH 1"].some(c => isCoursePlanned(c))) satisfiedCount++; // 5B
-    if (isCoursePlanned("ANTH 1L") || ["PHYS 4A", "PHYS 4B", "PHYS 4C", "PHYS 4D", "CHEM 1A", "CHEM 1B", "CHEM 1C", "BIOL 6A", "BIOL 6B", "BIOL 6C"].some(c => isCoursePlanned(c))) satisfiedCount++; // 5C (lab)
+    const sub5A = findSubArea("Area 5", "5A");
+    const sub5B = findSubArea("Area 5", "5B");
+    const sub5C = findSubArea("Area 5", "5C");
+    
+    const has5A = sub5A?.courses.some(c => isCoursePlanned(c));
+    const has5B = sub5B?.courses.some(c => isCoursePlanned(c));
+    if (has5A) satisfiedCount++;
+    if (has5B) satisfiedCount++;
+
+    // 5C: Lab requirement
+    const hasStandaloneLab = sub5C?.courses.some(c => isCoursePlanned(c));
+    const integratedLabs = [
+      "CHEM 1A", "CHEM 1AH", "CHEM 1B", "CHEM 1BH", "CHEM 1C", "CHEM 1CH", "PHYS 4A", 
+      "BIOL 6A", "BIOL 6AH", "BIOL 6B", "BIOL 6C", "BIOL 6CH"
+    ];
+    const hasIntegratedLab = integratedLabs.some(c => isCoursePlanned(c));
+    if (hasStandaloneLab || hasIntegratedLab) satisfiedCount++;
+
+    // Area 6
+    const sub6 = findSubArea("Area 6", "6");
+    if (sub6?.courses.some(c => isCoursePlanned(c))) satisfiedCount++;
 
     const percentage = Math.min(Math.round((satisfiedCount / totalSubAreas) * 100), 100);
     return { satisfiedCount, totalSubAreas, percentage };
@@ -128,7 +163,6 @@ export default function IgetcPage() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs">
             {igetcData.map((area) => {
               const isAreaSatisfied = area.subAreas.every(sub => {
-                if (sub.id === "1C") return true; // Ignore CSU specific 1C in general UC list
                 return isSubAreaSatisfied(sub);
               });
 
@@ -221,7 +255,7 @@ export default function IgetcPage() {
                     <h3 className="font-extrabold text-slate-800 text-sm">
                       {language === 'ja' ? subArea.nameJa : subArea.nameEn}
                     </h3>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                    <p className="text-xs text-slate-700 font-extrabold uppercase tracking-wide">
                       {t('igetcRequirement')}: {language === 'ja' ? subArea.requirementJa : subArea.requirementEn}
                     </p>
                   </div>
@@ -273,7 +307,7 @@ export default function IgetcPage() {
                           <h4 className="font-extrabold text-slate-900 text-xs">
                             {course.name}
                           </h4>
-                          <p className="text-[10px] text-slate-400 leading-normal font-medium italic">
+                          <p className="text-xs text-slate-500 leading-relaxed font-medium">
                             {course.description}
                           </p>
                         </div>
