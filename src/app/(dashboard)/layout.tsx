@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 interface SidebarItem {
-  nameKey: 'myEdPlan' | 'requirements' | 'myPage';
+  nameKey: 'myEdPlan' | 'requirements' | 'myPage' | 'igetcList';
   path: string;
   icon: React.ComponentType<{ className?: string }>;
 }
@@ -58,6 +58,7 @@ function DashboardLayoutContent({
     { nameKey: 'myEdPlan', path: '/edplan', icon: Calendar },
     { nameKey: 'requirements', path: '/requirements', icon: ClipboardList },
     { nameKey: 'myPage', path: '/profile', icon: User },
+    { nameKey: 'igetcList', path: '/igetc', icon: GraduationCap },
   ];
 
   const toggleMobileSidebar = () => {
