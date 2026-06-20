@@ -87,7 +87,8 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'ENGR 37L', name: 'Introduction to Circuit Analysis Laboratory', units: 2.0, type: 'Recommended', category: 'MajorPrep', description: 'Laboratory instruction for introduction to circuit analysis.' },
       { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Statewide common course for academic reading, composition, and research.' },
       { code: 'ENGL C1001', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Statewide common course for critical reading, reasoning, and argumentative writing.' },
-      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Recommended', category: 'MajorPrep', orGroup: 'EECS Data Structures Selection' },
+      { code: 'CIS 26B', name: 'Advanced C Programming', units: 4.5, type: 'Recommended', category: 'MajorPrep', orGroup: 'EECS Data Structures Selection' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC' }
     ]

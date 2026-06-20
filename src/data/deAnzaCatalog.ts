@@ -103,6 +103,7 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
     { code: "CIS 22A", name: "Beginning Programming Methodologies in C++", units: 4.5, description: "Introduction to computer programming and problem solving in C++." },
     { code: "CIS 22B", name: "Intermediate Programming Methodologies in C++", units: 4.5, description: "Object-oriented programming, classes, pointers, and file processing in C++." },
     { code: "CIS 22C", name: "Data Abstraction and Structures", units: 4.5, description: "Advanced data structures, linked lists, trees, graphs, and sorting algorithms." },
+    { code: "CIS 26B", name: "Advanced C Programming", units: 4.5, description: "Advanced C programming concepts, structural programming, memory allocation and pointer arrays." },
     { code: "CIS 35A", name: "Java Programming", units: 4.5, description: "Object-oriented software development in Java." },
     { code: "CIS 36A", name: "Introduction to Computer Science Using Java", units: 4.5, description: "Basic concepts of computer science and java programming." },
     { code: "CIS 40", name: "Introduction to Programming in Python", units: 4.5, description: "Beginning programming, variable types, loops and functions in Python." },
