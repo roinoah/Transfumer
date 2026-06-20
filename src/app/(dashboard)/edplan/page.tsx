@@ -50,6 +50,10 @@ export default function EdPlanPage() {
   const [isAddingTerm, setIsAddingTerm] = useState(false);
   const [newTermSelectValue, setNewTermSelectValue] = useState('');
 
+  // Drag and drop states
+  const [draggedCourse, setDraggedCourse] = useState<{ code: string; sourceTerm: string } | null>(null);
+  const [dragOverTerm, setDragOverTerm] = useState<string | null>(null);
+
   // Modal / Dropdown state for adding a course
   const [activeAddTerm, setActiveAddTerm] = useState<string | null>(null);
   const [addMethod, setAddMethod] = useState<'major' | 'catalog' | 'manual'>('major');
@@ -190,6 +194,64 @@ export default function EdPlanPage() {
     });
   };
 
+  // Drag & Drop handlers
+  const handleDragStart = (e: React.DragEvent, courseCode: string, sourceTerm: string) => {
+    setDraggedCourse({ code: courseCode, sourceTerm });
+    e.dataTransfer.setData('text/plain', JSON.stringify({ courseCode, sourceTerm }));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragEnd = () => {
+    setDraggedCourse(null);
+    setDragOverTerm(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleDragEnter = (e: React.DragEvent, targetTerm: string) => {
+    e.preventDefault();
+    setDragOverTerm(targetTerm);
+  };
+
+  const handleDrop = (e: React.DragEvent, targetTerm: string) => {
+    e.preventDefault();
+    setDragOverTerm(null);
+    
+    try {
+      const dataStr = e.dataTransfer.getData('text/plain');
+      if (!dataStr) return;
+      const { courseCode, sourceTerm } = JSON.parse(dataStr);
+      
+      if (sourceTerm === targetTerm) return;
+      
+      setTermPlans(prev => {
+        const sourceList = prev[sourceTerm] || [];
+        const targetList = prev[targetTerm] || [];
+        const courseToMove = sourceList.find(c => c.code === courseCode);
+        
+        if (!courseToMove) return prev;
+        
+        const alreadyExists = targetList.some(c => c.code === courseCode);
+        if (alreadyExists) {
+          alert(`${courseCode} ${t('duplicateWarning')}`);
+          return prev;
+        }
+        
+        return {
+          ...prev,
+          [sourceTerm]: sourceList.filter(c => c.code !== courseCode),
+          [targetTerm]: [...targetList, courseToMove]
+        };
+      });
+    } catch (err) {
+      console.error('Failed to parse drag data', err);
+    } finally {
+      setDraggedCourse(null);
+    }
+  };
+
   // Get next available terms to add
   const availableNextTerms = getNextAvailableTerms(Object.keys(termPlans));
 
@@ -233,8 +295,20 @@ export default function EdPlanPage() {
             const termUnits = calculateTermUnits(courses);
             const isAdding = activeAddTerm === term;
 
+            const isDragOver = dragOverTerm === term;
+
             return (
-              <div key={term} className="bg-white border border-slate-200/60 rounded-2xl shadow-sm flex flex-col min-h-[450px]">
+              <div 
+                key={term} 
+                onDragOver={handleDragOver}
+                onDragEnter={(e) => handleDragEnter(e, term)}
+                onDrop={(e) => handleDrop(e, term)}
+                className={`bg-white border rounded-2xl shadow-sm flex flex-col min-h-[450px] transition-all duration-200 ${
+                  isDragOver 
+                    ? 'border-blue-500 ring-2 ring-blue-500/10 bg-blue-50/5 shadow-md scale-[1.005]' 
+                    : 'border-slate-200/60'
+                }`}
+              >
                 {/* Term Header */}
                 <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-2xl">
                   <div>
@@ -260,12 +334,22 @@ export default function EdPlanPage() {
               {/* Course Cards Container */}
               <div className="flex-1 p-4 space-y-3 overflow-y-auto max-h-[350px]">
                 {courses.length > 0 ? (
-                  courses.map((course) => (
-                    <div
-                      key={course.code}
-                      className="group relative bg-slate-50 hover:bg-white border border-slate-100 hover:border-slate-200 rounded-xl p-4 transition-all duration-200 shadow-sm flex flex-col justify-between min-h-[90px]"
-                    >
-                      <div>
+                  courses.map((course) => {
+                    const isDraggingThis = draggedCourse?.code === course.code && draggedCourse?.sourceTerm === term;
+
+                    return (
+                      <div
+                        key={course.code}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, course.code, term)}
+                        onDragEnd={handleDragEnd}
+                        className={`group relative bg-slate-50 hover:bg-white border rounded-xl p-4 transition-all duration-200 shadow-sm flex flex-col justify-between min-h-[90px] cursor-grab active:cursor-grabbing ${
+                          isDraggingThis 
+                            ? 'opacity-40 border-dashed border-blue-300 scale-[0.98] bg-slate-100/50' 
+                            : 'border-slate-100 hover:border-slate-200'
+                        }`}
+                      >
+                        <div>
                         <div className="flex items-center justify-between mb-1.5 pr-6">
                           <span className="font-mono text-xs font-bold text-slate-700 bg-white border border-slate-200/60 px-2 py-0.5 rounded">
                             {course.code}
@@ -297,7 +381,8 @@ export default function EdPlanPage() {
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
-                  ))
+                    );
+                  })
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-center p-6 text-slate-400 border border-dashed border-slate-200 rounded-xl min-h-[180px]">
                     <LayoutGrid className="h-8 w-8 text-slate-300 mb-2" />
