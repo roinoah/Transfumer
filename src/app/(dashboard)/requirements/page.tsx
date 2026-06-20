@@ -176,7 +176,8 @@ export default function RequirementsPage() {
           return;
         }
 
-        const existing = courseMap.get(course.code);
+        const key = course.orGroup ? `${course.code}-${course.satisfies?.code || ''}` : course.code;
+        const existing = courseMap.get(key);
         const sourceEntry = {
           university: req.toUniversity,
           major: req.major,
@@ -196,7 +197,7 @@ export default function RequirementsPage() {
             existing.category = 'MajorPrep';
           }
         } else {
-          courseMap.set(course.code, {
+          courseMap.set(key, {
             ...course,
             sources: [sourceEntry]
           });
@@ -384,7 +385,7 @@ export default function RequirementsPage() {
         return selectedOption.course.code === course.code;
       }
       if (selectedOption.type === 'andGroup') {
-        return selectedOption.courses.some(c => c.code === course.code);
+        return selectedOption.courses.some(c => c.code === course.code && c.satisfies?.code === course.satisfies?.code);
       }
       return false; // placeholder option has no courses active
     });
