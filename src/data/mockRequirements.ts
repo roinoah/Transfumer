@@ -754,5 +754,16 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'STAT 20', name: 'Introduction to Probability and Statistics', units: 4.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'This course has a prerequisite of one semester of calculus', orGroup: 'Statistics Course', satisfies: { code: 'STAT 20', name: 'Introduction to Probability and Statistics' } },
       { code: 'STAT 21', name: 'Introductory Probability and Statistics for Business', units: 4.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'This course has a prerequisite of one semester of calculus', orGroup: 'Statistics Course', satisfies: { code: 'STAT 21', name: 'Introductory Probability and Statistics for Business' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Berkeley',
+    major: 'Political Economy, B.A.',
+    courses: [
+      { code: 'ECON 1', name: 'Introduction to Economics', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Political Economy Macro/Micro Economics Requirement', satisfies: { code: 'ECON 1 & 2', name: 'Principles of Macroeconomics & Microeconomics' } },
+      { code: 'ECON 1H', name: 'Principles of Macroeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Political Economy Macro/Micro Economics Requirement', satisfies: { code: 'ECON 1', name: 'Principles of Macroeconomics' } },
+      { code: 'ECON 2H', name: 'Principles of Microeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Political Economy Macro/Micro Economics Requirement', satisfies: { code: 'ECON 2', name: 'Principles of Microeconomics' } }
+    ]
   }
 ];
