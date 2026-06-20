@@ -732,5 +732,27 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'STAT C1000H', name: 'Introduction to Statistics - HONORS', units: 5.0, type: 'Recommended', category: 'MajorPrep', orGroup: 'Introduction to Statistics (STAT 2) Selection', satisfies: { code: 'STAT 2', name: 'Introduction to Statistics' } },
       { code: 'MATH 17', name: 'Integrated Statistics 2', units: 5.0, type: 'Recommended', category: 'MajorPrep', orGroup: 'Introduction to Statistics (STAT 2) Selection', satisfies: { code: 'STAT 2', name: 'Introduction to Statistics' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Berkeley',
+    major: 'Economics, B.A.',
+    courses: [
+      { code: 'ECON 1', name: 'Principles of Macroeconomics', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Introductory Economics Sequence', satisfies: { code: 'ECON 1', name: 'Introduction to Economics' } },
+      { code: 'ECON 2', name: 'Principles of Microeconomics', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Introductory Economics Sequence', satisfies: { code: 'ECON 2', name: 'Introduction to Economics' } },
+      { code: 'ECON 1H', name: 'Principles of Macroeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Introductory Economics Sequence', satisfies: { code: 'ECON 1', name: 'Introduction to Economics' } },
+      { code: 'ECON 2H', name: 'Principles of Microeconomics - HONORS', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Introductory Economics Sequence', satisfies: { code: 'ECON 2', name: 'Introduction to Economics' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1AH', name: 'Calculus I - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'MATH 1CH', name: 'Calculus III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Required Calculus Sequence' },
+      { code: 'STAT 20', name: 'Introduction to Probability and Statistics', units: 4.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'This course has a prerequisite of one semester of calculus', orGroup: 'Statistics Course', satisfies: { code: 'STAT 20', name: 'Introduction to Probability and Statistics' } },
+      { code: 'STAT 21', name: 'Introductory Probability and Statistics for Business', units: 4.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'This course has a prerequisite of one semester of calculus', orGroup: 'Statistics Course', satisfies: { code: 'STAT 21', name: 'Introductory Probability and Statistics for Business' } }
+    ]
   }
 ];
