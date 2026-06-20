@@ -92,6 +92,9 @@ export const translations = {
     selectFileBtn: 'ファイルを選択',
     completeOneFrom: '以下のいずれか1つの講義を修了:',
     orLabel: 'または',
+    completeOneOption: '以下のいずれか1つの選択肢を選択:',
+    andLabel: 'かつ',
+    takeAtUniv: '編入後に志望大学で履修',
     
     // Profile
     profileTitle: 'マイページ (My Page)',
@@ -185,6 +188,9 @@ export const translations = {
     selectFileBtn: 'Select File',
     completeOneFrom: 'Complete 1 course from the following:',
     orLabel: 'OR',
+    completeOneOption: 'Complete 1 option from the following:',
+    andLabel: 'AND',
+    takeAtUniv: 'Take at target university after transfer',
     
     // Profile
     profileTitle: 'My Page',

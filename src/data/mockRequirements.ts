@@ -7,6 +7,10 @@ export interface Course {
   description?: string;
   isOverlap?: boolean;
   orGroup?: string;
+  satisfies?: {
+    code: string;
+    name: string;
+  };
 }
 
 export interface TransferRequirement {
@@ -63,7 +67,9 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
       { code: 'PHYS 4A', name: 'Physics: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
       { code: 'PHYS 4B', name: 'Physics: Electricity & Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep' },
-      { code: 'PHYS 4C', name: 'Physics: Fluids, Waves & Optics', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'PHYS 4C', name: 'Physics: Fluids, Waves & Optics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7C', name: 'Physics for Scientists and Engineers' }, orGroup: 'EECS Physics Selection' },
+      { code: 'PHYS 4D', name: 'Physics: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7C', name: 'Physics for Scientists and Engineers' }, orGroup: 'EECS Physics Selection' },
+      { code: 'UCB-PHYSICS7C', name: 'Take PHYSICS 7C at UC Berkeley (after transfer)', units: 0.0, type: 'Recommended', category: 'MajorPrep', orGroup: 'EECS Physics Selection', description: 'Opt to complete equivalent physics requirement at UC Berkeley post-transfer.' },
       { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', orGroup: 'EECS C++ Selection' },
       { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', orGroup: 'EECS C++ Selection' },

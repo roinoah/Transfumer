@@ -6,6 +6,25 @@ import { deAnzaCatalog } from '../../../data/deAnzaCatalog';
 import { useLanguage } from '../../../context/LanguageContext';
 import { BookOpen, Search, CheckCircle, Info, Sparkles, Upload, X, FileText, Loader2 } from 'lucide-react';
 
+export interface TargetCourse {
+  code: string;
+  name: string;
+}
+
+export interface CombinedCourse extends Course {
+  sources: { university: string; major: string; type: 'Required' | 'Recommended' }[];
+}
+
+export type RenderOption =
+  | { type: 'single'; course: CombinedCourse }
+  | { type: 'andGroup'; targetCourse: TargetCourse; courses: CombinedCourse[] }
+  | { type: 'placeholder'; code: string; name: string; description?: string; units: number };
+
+export type RenderItem =
+  | { type: 'single'; course: CombinedCourse; originalIndex: number }
+  | { type: 'andGroup'; targetCourse: TargetCourse; courses: CombinedCourse[]; originalIndex: number }
+  | { type: 'orGroup'; name: string; options: RenderOption[]; originalIndex: number };
+
 export default function RequirementsPage() {
   const { t, language } = useLanguage();
 
@@ -117,9 +136,7 @@ export default function RequirementsPage() {
     });
   };
 
-  interface CombinedCourse extends Course {
-    sources: { university: string; major: string; type: 'Required' | 'Recommended' }[];
-  }
+
 
   // Fetch combined courses based on selects
   const combinedRequirement = useMemo(() => {
@@ -207,47 +224,134 @@ export default function RequirementsPage() {
     });
   }, [combinedRequirement, searchQuery]);
 
-  // Group and sort courses for rendering (handling OR groups)
+  // Group and sort courses for rendering (handling OR and AND groups based on satisfies target courses)
   const renderedItems = useMemo(() => {
-    type RenderItem = 
-      | { type: 'single'; course: CombinedCourse; originalIndex: number }
-      | { type: 'group'; orGroup: string; courses: CombinedCourse[]; originalIndex: number };
-
     const items: RenderItem[] = [];
-    const groupMap = new Map<string, CombinedCourse[]>();
+    
+    // 1. Group courses by orGroup
+    const orGroupCoursesMap = new Map<string, CombinedCourse[]>();
+    const nonOrGroupCourses: CombinedCourse[] = [];
 
     filteredCourses.forEach(course => {
       if (course.orGroup) {
-        if (!groupMap.has(course.orGroup)) {
-          groupMap.set(course.orGroup, []);
+        if (!orGroupCoursesMap.has(course.orGroup)) {
+          orGroupCoursesMap.set(course.orGroup, []);
         }
-        groupMap.get(course.orGroup)!.push(course);
+        orGroupCoursesMap.get(course.orGroup)!.push(course);
       } else {
-        items.push({ 
-          type: 'single', 
-          course, 
-          originalIndex: filteredCourses.indexOf(course) 
+        nonOrGroupCourses.push(course);
+      }
+    });
+
+    // 2. Process non-or-group courses (group by satisfies if multiple)
+    const satisfiesMap = new Map<string, CombinedCourse[]>();
+    const singles: CombinedCourse[] = [];
+
+    nonOrGroupCourses.forEach(course => {
+      if (course.satisfies) {
+        const key = course.satisfies.code;
+        if (!satisfiesMap.has(key)) {
+          satisfiesMap.set(key, []);
+        }
+        satisfiesMap.get(key)!.push(course);
+      } else {
+        singles.push(course);
+      }
+    });
+
+    // Add singles
+    singles.forEach(course => {
+      items.push({
+        type: 'single',
+        course,
+        originalIndex: filteredCourses.indexOf(course)
+      });
+    });
+
+    // Add satisfies groups
+    satisfiesMap.forEach((courses) => {
+      const targetCourse = courses[0].satisfies!;
+      const minIndex = Math.min(...courses.map(c => filteredCourses.indexOf(c)));
+      
+      if (courses.length > 1) {
+        items.push({
+          type: 'andGroup',
+          targetCourse,
+          courses,
+          originalIndex: minIndex
+        });
+      } else {
+        items.push({
+          type: 'single',
+          course: courses[0],
+          originalIndex: minIndex
         });
       }
     });
 
-    groupMap.forEach((courses, orGroup) => {
-      let minIndex = filteredCourses.length;
-      courses.forEach(c => {
-        const idx = filteredCourses.indexOf(c);
-        if (idx !== -1 && idx < minIndex) {
-          minIndex = idx;
+    // 3. Process orGroup courses
+    orGroupCoursesMap.forEach((courses, groupName) => {
+      const minIndex = Math.min(...courses.map(c => filteredCourses.indexOf(c)));
+      const options: RenderOption[] = [];
+
+      // Within the OR group, group by satisfies target
+      const innerSatisfiesMap = new Map<string, CombinedCourse[]>();
+      const innerSingles: CombinedCourse[] = [];
+
+      courses.forEach(course => {
+        if (course.code.startsWith('UCB-') || course.code.startsWith('PLACEHOLDER-')) {
+          options.push({
+            type: 'placeholder',
+            code: course.code,
+            name: course.name,
+            description: course.description,
+            units: course.units
+          });
+        } else if (course.satisfies) {
+          const key = course.satisfies.code;
+          if (!innerSatisfiesMap.has(key)) {
+            innerSatisfiesMap.set(key, []);
+          }
+          innerSatisfiesMap.get(key)!.push(course);
+        } else {
+          innerSingles.push(course);
         }
       });
 
-      items.push({ 
-        type: 'group', 
-        orGroup, 
-        courses, 
-        originalIndex: minIndex 
+      // Add satisfies groups as options
+      innerSatisfiesMap.forEach((subCourses) => {
+        const targetCourse = subCourses[0].satisfies!;
+        if (subCourses.length > 1) {
+          options.push({
+            type: 'andGroup',
+            targetCourse,
+            courses: subCourses
+          });
+        } else {
+          options.push({
+            type: 'single',
+            course: subCourses[0]
+          });
+        }
+      });
+
+      // Add singles as options
+      innerSingles.forEach(course => {
+        options.push({
+          type: 'single',
+          course
+        });
+      });
+
+      items.push({
+        type: 'orGroup',
+        name: groupName,
+        options,
+        originalIndex: minIndex
       });
     });
 
+    // 4. Sort items by originalIndex
     items.sort((a, b) => a.originalIndex - b.originalIndex);
     return items;
   }, [filteredCourses]);
@@ -257,23 +361,43 @@ export default function RequirementsPage() {
     if (!combinedRequirement) return { total: 0, required: 0, recommended: 0 };
     const courses = combinedRequirement.courses;
     
-    // For courses belonging to an orGroup, only count the one that is currently selected (or default to the first one)
-    const countedCourses = courses.filter(course => {
+    // For courses belonging to an orGroup, only count the ones belonging to the selected option
+    const activeCourses = courses.filter(course => {
       if (!course.orGroup) return true;
-      const firstInGroupCode = courses.find(c => c.orGroup === course.orGroup)?.code;
-      const selectedCode = selectedOrCourses[course.orGroup] || firstInGroupCode;
-      return course.code === selectedCode;
+      
+      const groupItem = renderedItems.find(
+        item => item.type === 'orGroup' && item.name === course.orGroup
+      );
+      if (!groupItem || groupItem.type !== 'orGroup') return true;
+
+      const getOptionId = (option: RenderOption) => {
+        if (option.type === 'single') return option.course.code;
+        if (option.type === 'andGroup') return option.targetCourse.code;
+        return option.code;
+      };
+
+      const selectedId = selectedOrCourses[course.orGroup] || (groupItem.options[0] ? getOptionId(groupItem.options[0]) : '');
+      const selectedOption = groupItem.options.find(opt => getOptionId(opt) === selectedId);
+      if (!selectedOption) return false;
+
+      if (selectedOption.type === 'single') {
+        return selectedOption.course.code === course.code;
+      }
+      if (selectedOption.type === 'andGroup') {
+        return selectedOption.courses.some(c => c.code === course.code);
+      }
+      return false; // placeholder option has no courses active
     });
     
-    const required = countedCourses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
-    const recommended = countedCourses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
+    const required = activeCourses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
+    const recommended = activeCourses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
     
     return {
       total: required + recommended,
       required,
       recommended
     };
-  }, [combinedRequirement, selectedOrCourses]);
+  }, [combinedRequirement, renderedItems, selectedOrCourses]);
 
   // Look up course in local catalog database
   const getCatalogCourse = (code: string) => {
@@ -636,6 +760,13 @@ export default function RequirementsPage() {
                                 <span>{t('doubleCounted')}</span>
                               </span>
                             )}
+
+                            {/* Satisfies badge */}
+                            {course.satisfies && (
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                🎓 Satisfies: {course.satisfies.code}
+                              </span>
+                            )}
                           </div>
                           <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-base pt-1">
                             {course.name}
@@ -675,11 +806,91 @@ export default function RequirementsPage() {
                         </div>
                       </div>
                     );
-                  } else {
-                    // Group type: Render OR choice list
-                    const groupName = item.orGroup;
+                  } else if (item.type === 'andGroup') {
+                    const targetCourse = item.targetCourse;
                     const courses = item.courses;
-                    const selectedCode = selectedOrCourses[groupName] || courses[0]?.code;
+                    return (
+                      <div 
+                        key={targetCourse.code}
+                        className="bg-white border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden"
+                      >
+                        {/* Target Course Header */}
+                        <div className="bg-slate-50/80 border-b border-slate-100 p-4 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md font-mono text-[10px] font-bold">
+                              UCB {targetCourse.code}
+                            </span>
+                            <span className="text-xs font-bold text-slate-700">
+                              {targetCourse.name}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                            Satisfies Requirement
+                          </span>
+                        </div>
+
+                        {/* List of De Anza courses connected by AND */}
+                        <div className="p-4 space-y-3">
+                          {courses.map((course, idx) => (
+                            <div key={course.code} className="space-y-3">
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                                <div className="space-y-1.5 flex-1">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <span className="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px]">
+                                      {course.code}
+                                    </span>
+                                    {course.type === 'Required' ? (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                                        {t('required')}
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                        {t('recommended')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  <h4 className="font-bold text-sm text-slate-900">{course.name}</h4>
+                                  {course.description && (
+                                    <p className="text-xs text-slate-400 leading-relaxed">{course.description}</p>
+                                  )}
+                                </div>
+                                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                                  <span className="text-xs font-semibold text-slate-500">
+                                    {course.units.toFixed(1)} {t('unitsLabel')}
+                                  </span>
+                                  <div className="h-5 w-5 rounded-full bg-slate-50 flex items-center justify-center text-slate-300">
+                                    <CheckCircle className="h-4.5 w-4.5" />
+                                  </div>
+                                </div>
+                              </div>
+
+                              {idx < courses.length - 1 && (
+                                <div className="relative py-1 flex items-center justify-center">
+                                  <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-slate-100"></div>
+                                  </div>
+                                  <span className="relative px-2.5 py-0.5 text-[9px] font-bold text-blue-600 bg-blue-50 border border-blue-100 rounded-full select-none shadow-sm uppercase tracking-wider">
+                                    {t('andLabel')}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  } else {
+                    // Group type: Render OR choice list of single, andGroup, or placeholders
+                    const groupName = item.name;
+                    const options = item.options;
+                    
+                    const getOptionId = (option: RenderOption) => {
+                      if (option.type === 'single') return option.course.code;
+                      if (option.type === 'andGroup') return option.targetCourse.code;
+                      return option.code;
+                    };
+
+                    const selectedId = selectedOrCourses[groupName] || (options[0] ? getOptionId(options[0]) : '');
 
                     return (
                       <div 
@@ -693,7 +904,7 @@ export default function RequirementsPage() {
                               <Sparkles className="h-4 w-4 text-indigo-600" />
                             </span>
                             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                              {t('completeOneFrom')}
+                              {t('completeOneOption')}
                             </span>
                           </div>
                           <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-[10px] font-bold text-indigo-600">
@@ -701,22 +912,24 @@ export default function RequirementsPage() {
                           </span>
                         </div>
 
-                        {/* List of subcourses */}
-                        <div className="space-y-2">
-                          {courses.map((course, idx) => {
-                            const isSelected = course.code === selectedCode;
+                        {/* List of sub-options */}
+                        <div className="space-y-3">
+                          {options.map((option, idx) => {
+                            const optionId = getOptionId(option);
+                            const isSelected = optionId === selectedId;
+
                             return (
-                              <div key={course.code} className="space-y-2">
+                              <div key={optionId} className="space-y-3">
                                 <div 
-                                  onClick={() => setSelectedOrCourses(prev => ({ ...prev, [groupName]: course.code }))}
-                                  className={`p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 cursor-pointer transition-all duration-200 ${
+                                  onClick={() => setSelectedOrCourses(prev => ({ ...prev, [groupName]: optionId }))}
+                                  className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 space-y-3 ${
                                     isSelected 
                                       ? 'bg-white border-indigo-500 shadow-md shadow-indigo-500/5 ring-1 ring-indigo-500' 
                                       : 'bg-white/60 border-slate-200/70 opacity-60 hover:opacity-100 hover:border-slate-300'
                                   }`}
                                 >
-                                  <div className="flex items-start gap-3 flex-1">
-                                    {/* Custom Radio Button on Left */}
+                                  {/* Radio indicator and Option Title */}
+                                  <div className="flex items-start gap-3">
                                     <div className="pt-0.5 shrink-0">
                                       <div className={`h-4.5 w-4.5 rounded-full border flex items-center justify-center transition-all ${
                                         isSelected 
@@ -727,48 +940,125 @@ export default function RequirementsPage() {
                                       </div>
                                     </div>
 
-                                    <div className="space-y-1">
-                                      <div className="flex items-center gap-2 flex-wrap">
-                                        <span className="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-[10px] tracking-wider">
-                                          {course.code}
-                                        </span>
-                                        {course.type === 'Required' ? (
-                                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                                            {t('required')}
-                                          </span>
-                                        ) : (
-                                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
-                                            {t('recommended')}
-                                          </span>
-                                        )}
-                                      </div>
-                                      <h4 className={`font-bold text-sm transition-colors ${
-                                        isSelected ? 'text-indigo-900' : 'text-slate-700'
-                                      }`}>
-                                        {course.name}
-                                      </h4>
-                                      {course.description && (
-                                        <p className="text-[11px] text-slate-400 leading-relaxed line-clamp-1 group-hover:line-clamp-none">
-                                          {course.description}
-                                        </p>
+                                    {/* Option Content Rendering based on type */}
+                                    <div className="flex-1 space-y-2">
+                                      {option.type === 'single' && (
+                                        <div className="space-y-1">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="font-mono font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded text-[10px] tracking-wider">
+                                              {option.course.code}
+                                            </span>
+                                            {option.course.type === 'Required' ? (
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                                                {t('required')}
+                                              </span>
+                                            ) : (
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                                {t('recommended')}
+                                              </span>
+                                            )}
+                                            {option.course.satisfies && (
+                                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-50 text-indigo-700 border border-indigo-100">
+                                                🎓 Satisfies: {option.course.satisfies.code}
+                                              </span>
+                                            )}
+                                          </div>
+                                          <h4 className={`font-bold text-sm transition-colors ${
+                                            isSelected ? 'text-indigo-900' : 'text-slate-700'
+                                          }`}>
+                                            {option.course.name}
+                                          </h4>
+                                          {option.course.description && (
+                                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                                              {option.course.description}
+                                            </p>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {option.type === 'andGroup' && (
+                                        <div className="space-y-3">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md font-mono text-[9px] font-bold">
+                                              Satisfies: {option.targetCourse.code}
+                                            </span>
+                                            <span className="text-xs font-bold text-slate-700">
+                                              {option.targetCourse.name}
+                                            </span>
+                                          </div>
+
+                                          {/* Nested De Anza courses */}
+                                          <div className="space-y-2.5 bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                                            {option.courses.map((subC, subIdx) => (
+                                              <div key={subC.code} className="space-y-2.5">
+                                                <div className="flex items-center justify-between gap-3 text-xs">
+                                                  <div className="space-y-0.5">
+                                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                                      <span className="font-mono font-bold text-slate-700 bg-slate-100 px-1.5 py-0.5 rounded text-[9px]">
+                                                        {subC.code}
+                                                      </span>
+                                                      <span className="font-semibold text-slate-600">{subC.name}</span>
+                                                    </div>
+                                                  </div>
+                                                  <span className="text-[10px] text-slate-400 font-bold shrink-0">{subC.units.toFixed(1)}U</span>
+                                                </div>
+
+                                                {subIdx < option.courses.length - 1 && (
+                                                  <div className="relative py-0.5 flex items-center justify-center">
+                                                    <div className="absolute inset-0 flex items-center">
+                                                      <div className="w-full border-t border-slate-200/50"></div>
+                                                    </div>
+                                                    <span className="relative px-2 py-0.2 text-[8px] font-bold text-blue-500 bg-blue-50 border border-blue-100 rounded-full select-none shadow-sm uppercase tracking-wider">
+                                                      {t('andLabel')}
+                                                    </span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {option.type === 'placeholder' && (
+                                        <div className="space-y-1">
+                                          <div className="flex items-center gap-2 flex-wrap">
+                                            <span className="font-mono font-bold text-slate-400 border border-slate-200 px-2 py-0.5 rounded text-[10px] tracking-wider">
+                                              {option.code}
+                                            </span>
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700 border border-amber-100">
+                                              🏫 {t('takeAtUniv')}
+                                            </span>
+                                          </div>
+                                          <h4 className={`font-bold text-sm transition-colors ${
+                                            isSelected ? 'text-indigo-900' : 'text-slate-700'
+                                          }`}>
+                                            {option.name}
+                                          </h4>
+                                          {option.description && (
+                                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                                              {option.description}
+                                            </p>
+                                          )}
+                                        </div>
                                       )}
                                     </div>
-                                  </div>
-
-                                  <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                                    <span className="text-xs font-semibold text-slate-500">
-                                      {course.units.toFixed(1)} {t('unitsLabel')}
-                                    </span>
-                                    <div className={`h-5 w-5 rounded-full flex items-center justify-center transition-colors ${
-                                      isSelected ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-200'
-                                    }`}>
-                                      <CheckCircle className="h-4.5 w-4.5" />
+                                    
+                                    {/* Option Right Info (Total Units for this option) */}
+                                    <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                                      <span className="text-xs font-semibold text-slate-500">
+                                        {option.type === 'single' ? option.course.units.toFixed(1) : option.type === 'andGroup' ? option.courses.reduce((sum, c) => sum + c.units, 0).toFixed(1) : option.units.toFixed(1)} {t('unitsLabel')}
+                                      </span>
+                                      <div className={`h-5 w-5 rounded-full flex items-center justify-center transition-colors ${
+                                        isSelected ? 'bg-indigo-50 text-indigo-600' : 'bg-slate-50 text-slate-200'
+                                      }`}>
+                                        <CheckCircle className="h-4.5 w-4.5" />
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
 
                                 {/* Divider OR */}
-                                {idx < courses.length - 1 && (
+                                {idx < options.length - 1 && (
                                   <div className="relative py-1 flex items-center justify-center">
                                     <div className="absolute inset-0 flex items-center">
                                       <div className="w-full border-t border-slate-200/50"></div>
