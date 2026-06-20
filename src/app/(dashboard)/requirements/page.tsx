@@ -12,7 +12,7 @@ export interface TargetCourse {
 }
 
 export interface CombinedCourse extends Course {
-  sources: { university: string; major: string; type: 'Required' | 'Recommended' }[];
+  sources: { university: string; major: string; type: 'Required' | 'Recommended' | 'Highly Recommended' }[];
 }
 
 export type RenderOption =
@@ -189,6 +189,8 @@ export default function RequirementsPage() {
           // If it is 'Required' in any of the requirements, it becomes 'Required' overall
           if (course.type === 'Required') {
             existing.type = 'Required';
+          } else if (course.type === 'Highly Recommended' && existing.type !== 'Required') {
+            existing.type = 'Highly Recommended';
           }
           if (course.isOverlap) {
             existing.isOverlap = true;
@@ -352,30 +354,42 @@ export default function RequirementsPage() {
       });
     });
 
-    // Helper to determine if a render item is Required
-    const isItemRequired = (item: RenderItem) => {
+    // Helper to determine the rank of a render item (Required = 3, Highly Recommended = 2, Recommended = 1)
+    const getItemRank = (item: RenderItem) => {
       if (item.type === 'single') {
-        return item.course.type === 'Required';
+        if (item.course.type === 'Required') return 3;
+        if (item.course.type === 'Highly Recommended') return 2;
+        return 1;
       }
       if (item.type === 'andGroup') {
-        return item.courses.some(c => c.type === 'Required');
+        if (item.courses.some(c => c.type === 'Required')) return 3;
+        if (item.courses.some(c => c.type === 'Highly Recommended')) return 2;
+        return 1;
       }
       if (item.type === 'orGroup') {
-        return item.options.some(opt => {
-          if (opt.type === 'single') return opt.course.type === 'Required';
-          if (opt.type === 'andGroup') return opt.courses.some(c => c.type === 'Required');
-          return false;
+        let hasRequired = false;
+        let hasHighlyRecommended = false;
+        item.options.forEach(opt => {
+          if (opt.type === 'single') {
+            if (opt.course.type === 'Required') hasRequired = true;
+            if (opt.course.type === 'Highly Recommended') hasHighlyRecommended = true;
+          } else if (opt.type === 'andGroup') {
+            if (opt.courses.some(c => c.type === 'Required')) hasRequired = true;
+            if (opt.courses.some(c => c.type === 'Highly Recommended')) hasHighlyRecommended = true;
+          }
         });
+        if (hasRequired) return 3;
+        if (hasHighlyRecommended) return 2;
+        return 1;
       }
-      return false;
+      return 1;
     };
 
-    // 4. Sort items: Required first, then Recommended. Preserve original order within each category.
+    // 4. Sort items: Required first, then Highly Recommended, then Recommended. Preserve original order within each category.
     items.sort((a, b) => {
-      const reqA = isItemRequired(a);
-      const reqB = isItemRequired(b);
-      if (reqA && !reqB) return -1;
-      if (!reqA && reqB) return 1;
+      const rankA = getItemRank(a);
+      const rankB = getItemRank(b);
+      if (rankA !== rankB) return rankB - rankA;
       return a.originalIndex - b.originalIndex;
     });
     return items;
@@ -415,7 +429,7 @@ export default function RequirementsPage() {
     });
     
     const required = activeCourses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
-    const recommended = activeCourses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
+    const recommended = activeCourses.filter(c => c.type !== 'Required').reduce((sum, c) => sum + c.units, 0);
     
     return {
       total: required + recommended,
@@ -772,6 +786,10 @@ export default function RequirementsPage() {
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/10">
                                 {t('required')}
                               </span>
+                            ) : course.type === 'Highly Recommended' ? (
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm shadow-indigo-500/10">
+                                {t('highlyRecommended')}
+                              </span>
                             ) : (
                               <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
                                 {t('recommended')}
@@ -809,7 +827,7 @@ export default function RequirementsPage() {
                                       : 'bg-amber-50/80 text-amber-800 border border-amber-200/80'
                                   }`}
                                 >
-                                  🏫 {src.university} ({src.major}) - {src.type === 'Required' ? t('required') : t('recommended')}
+                                  🏫 {src.university} ({src.major}) - {src.type === 'Required' ? t('required') : src.type === 'Highly Recommended' ? t('highlyRecommended') : t('recommended')}
                                 </span>
                               );
                             })}
@@ -867,6 +885,10 @@ export default function RequirementsPage() {
                                     {course.type === 'Required' ? (
                                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                                         {t('required')}
+                                      </span>
+                                    ) : course.type === 'Highly Recommended' ? (
+                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                                        {t('highlyRecommended')}
                                       </span>
                                     ) : (
                                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
@@ -991,6 +1013,10 @@ export default function RequirementsPage() {
                                             {option.course.type === 'Required' ? (
                                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                                                 {t('required')}
+                                              </span>
+                                            ) : option.course.type === 'Highly Recommended' ? (
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
+                                                {t('highlyRecommended')}
                                               </span>
                                             ) : (
                                               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">

@@ -402,6 +402,10 @@ export default function EdPlanPage() {
                             <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 px-2 py-0.5 rounded-full">
                               {t('required')}
                             </span>
+                          ) : course.type === 'Highly Recommended' ? (
+                            <span className="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-100/50 px-2 py-0.5 rounded-full">
+                              {t('highlyRecommended')}
+                            </span>
                           ) : (
                             <span className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-full">
                               {t('recommended')}
