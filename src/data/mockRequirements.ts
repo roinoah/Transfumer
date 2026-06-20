@@ -49,10 +49,13 @@ export const mockRequirements: TransferRequirement[] = [
     courses: [
       { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Differential Calculus.', isOverlap: true },
       { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Integral Calculus.', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Infinite series, vectors, vector-valued functions, multivariable calculus.' },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Ordinary differential equations.' },
       { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Vector spaces, matrices, and linear transforms.' },
-      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', description: 'Introduction to computer programming.' },
-      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Object-oriented programming in C++.' },
-      { code: 'CIS 40', name: 'Introduction to Programming in Python', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Beginning programming, variable types, loops and functions in Python.' },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Highly Recommended', category: 'MajorPrep', description: 'Vector calculus and series.' },
+      { code: 'CIS 11', name: 'Foundations of Data Science for All', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Introduction to data science: computation, statistics, and visualization.' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Advanced structures and abstract data types.', orGroup: 'DS Data Structures Selection' },
+      { code: 'CIS 26B', name: 'Advanced C Programming', units: 4.5, type: 'Highly Recommended', category: 'MajorPrep', description: 'Advanced C programming concepts, structural programming, memory allocation and pointer arrays.', orGroup: 'DS Data Structures Selection' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC', description: 'Expository writing, reading and research.' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Argumentative writing and textual analysis.' }
     ]
