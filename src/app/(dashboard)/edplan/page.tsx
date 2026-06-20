@@ -6,6 +6,33 @@ import { deAnzaCatalog } from '../../../data/deAnzaCatalog';
 import { useLanguage } from '../../../context/LanguageContext';
 import { Plus, Trash2, Calendar, LayoutGrid } from 'lucide-react';
 
+// Chronological term weight parser
+const parseTerm = (term: string) => {
+  const [season, yearStr] = term.split(' ');
+  const year = parseInt(yearStr, 10);
+  const seasonOrder: Record<string, number> = {
+    'Winter': 0,
+    'Spring': 1,
+    'Summer': 2,
+    'Fall': 3
+  };
+  return year * 4 + (seasonOrder[season] ?? 0);
+};
+
+// Generates next available logical quarters not already in plans
+const getNextAvailableTerms = (currentTerms: string[]) => {
+  const terms: string[] = [];
+  for (let year = 2026; year <= 2031; year++) {
+    for (const season of ['Winter', 'Spring', 'Summer', 'Fall']) {
+      const termName = `${season} ${year}`;
+      if (!currentTerms.includes(termName)) {
+        terms.push(termName);
+      }
+    }
+  }
+  return terms.sort((a, b) => parseTerm(a) - parseTerm(b));
+};
+
 export default function EdPlanPage() {
   const { t, language } = useLanguage();
 
@@ -18,6 +45,10 @@ export default function EdPlanPage() {
 
   const [termPlans, setTermPlans] = useState<Record<string, Course[]>>(defaultPlans);
   const [isLoaded, setIsLoaded] = useState(false);
+
+  // States for adding a new term
+  const [isAddingTerm, setIsAddingTerm] = useState(false);
+  const [newTermSelectValue, setNewTermSelectValue] = useState('');
 
   // Modal / Dropdown state for adding a course
   const [activeAddTerm, setActiveAddTerm] = useState<string | null>(null);
@@ -134,6 +165,39 @@ export default function EdPlanPage() {
     }));
   };
 
+  const handleAddTerm = (termName: string) => {
+    if (!termName) return;
+    setTermPlans(prev => {
+      if (prev[termName]) return prev;
+      return {
+        ...prev,
+        [termName]: []
+      };
+    });
+    setIsAddingTerm(false);
+  };
+
+  const handleDeleteTerm = (termName: string) => {
+    const hasCourses = termPlans[termName]?.length > 0;
+    if (hasCourses) {
+      const confirmDelete = window.confirm(t('deleteTermConfirm'));
+      if (!confirmDelete) return;
+    }
+    setTermPlans(prev => {
+      const copy = { ...prev };
+      delete copy[termName];
+      return copy;
+    });
+  };
+
+  // Get next available terms to add
+  const availableNextTerms = getNextAvailableTerms(Object.keys(termPlans));
+
+  // Determine the default term selection value dynamically during render
+  const selectedTermValue = availableNextTerms.includes(newTermSelectValue)
+    ? newTermSelectValue
+    : (availableNextTerms[0] || '');
+
   // Calculate stats
   const calculateTermUnits = (courses: Course[]) => {
     return courses.reduce((sum, c) => sum + c.units, 0);
@@ -163,24 +227,35 @@ export default function EdPlanPage() {
 
       {/* Timeline Layout */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {Object.entries(termPlans).map(([term, courses]) => {
-          const termUnits = calculateTermUnits(courses);
-          const isAdding = activeAddTerm === term;
+        {Object.entries(termPlans)
+          .sort((a, b) => parseTerm(a[0]) - parseTerm(b[0]))
+          .map(([term, courses]) => {
+            const termUnits = calculateTermUnits(courses);
+            const isAdding = activeAddTerm === term;
 
-          return (
-            <div key={term} className="bg-white border border-slate-200/60 rounded-2xl shadow-sm flex flex-col min-h-[450px]">
-              {/* Term Header */}
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-2xl">
-                <div>
-                  <h2 className="font-extrabold text-slate-800 text-base flex items-center gap-2">
-                    <Calendar className="h-4.5 w-4.5 text-blue-600" />
-                    <span>{term}</span>
-                  </h2>
+            return (
+              <div key={term} className="bg-white border border-slate-200/60 rounded-2xl shadow-sm flex flex-col min-h-[450px]">
+                {/* Term Header */}
+                <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50 rounded-t-2xl">
+                  <div>
+                    <h2 className="font-extrabold text-slate-800 text-base flex items-center gap-2">
+                      <Calendar className="h-4.5 w-4.5 text-blue-600" />
+                      <span>{term}</span>
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-lg">
+                      {t('termTotal')}: {termUnits.toFixed(1)} {t('unitsLabel')}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteTerm(term)}
+                      className="p-1 text-slate-400 hover:text-red-500 hover:bg-slate-100/80 rounded transition-colors cursor-pointer"
+                      title={t('deleteTermBtn')}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
                 </div>
-                <span className="text-xs font-bold text-slate-500 bg-white border border-slate-200 px-2 py-1 rounded-lg">
-                  {t('termTotal')}: {termUnits.toFixed(1)} {t('unitsLabel')}
-                </span>
-              </div>
 
               {/* Course Cards Container */}
               <div className="flex-1 p-4 space-y-3 overflow-y-auto max-h-[350px]">
@@ -405,6 +480,69 @@ export default function EdPlanPage() {
             </div>
           );
         })}
+
+        {/* Add Term Card */}
+        <div className="border border-dashed border-slate-200/80 hover:border-slate-300 hover:bg-slate-50/20 rounded-2xl p-6 flex flex-col items-center justify-center text-center min-h-[450px] transition-all duration-200 shadow-sm bg-white/40">
+          {!isAddingTerm ? (
+            <button
+              onClick={() => {
+                if (availableNextTerms.length > 0) {
+                  setNewTermSelectValue(availableNextTerms[0]);
+                }
+                setIsAddingTerm(true);
+              }}
+              className="group flex flex-col items-center justify-center cursor-pointer space-y-3 p-8 rounded-xl hover:bg-slate-50/80 transition-all duration-200 w-full h-full"
+            >
+              <div className="h-12 w-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-110 transition-transform shadow-sm">
+                <Plus className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-800 text-sm">{t('addTermBtn')}</h3>
+                <p className="text-xs text-slate-400 mt-1 max-w-[200px] leading-relaxed">
+                  {language === 'ja' 
+                    ? '新しいクォーターを追加して履修計画を拡大します。' 
+                    : 'Add a new quarter to expand your education path.'}
+                </p>
+              </div>
+            </button>
+          ) : (
+            <div className="w-full max-w-[240px] space-y-4 animate-fadeIn">
+              <div className="text-center space-y-1">
+                <Calendar className="h-8 w-8 text-blue-600 mx-auto" />
+                <h3 className="font-bold text-slate-800 text-sm">{t('selectTermLabel')}</h3>
+              </div>
+              
+              <select
+                value={selectedTermValue}
+                onChange={(e) => setNewTermSelectValue(e.target.value)}
+                className="w-full text-xs bg-white border border-slate-200 p-2.5 rounded-xl text-slate-700 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500 shadow-sm"
+              >
+                {availableNextTerms.slice(0, 12).map((termName) => (
+                  <option key={termName} value={termName}>
+                    {termName}
+                  </option>
+                ))}
+              </select>
+
+              <div className="flex gap-2 w-full pt-2">
+                <button
+                  onClick={() => {
+                    handleAddTerm(selectedTermValue);
+                  }}
+                  className="w-1/2 text-xs bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-xl transition shadow-sm cursor-pointer"
+                >
+                  {t('addBtn')}
+                </button>
+                <button
+                  onClick={() => setIsAddingTerm(false)}
+                  className="w-1/2 text-xs bg-white border border-slate-200 hover:bg-slate-50 text-slate-500 font-semibold py-2 rounded-xl transition shadow-sm cursor-pointer"
+                >
+                  {t('cancelBtn')}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
       </section>
     </div>
   );

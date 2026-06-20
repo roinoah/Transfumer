@@ -35,6 +35,10 @@ export const translations = {
     duplicateWarning: 'は既にこの学期に登録されています。',
     inputError: '科目コードと科目名を入力してください。',
     termTotal: 'Total',
+    addTermBtn: '学期/クォーターを追加',
+    selectTermLabel: '追加するクォーターを選択',
+    deleteTermBtn: 'クォーターを削除',
+    deleteTermConfirm: 'このクォーターと登録されているすべての授業を削除してもよろしいですか？',
     
     // Requirements
     reqTitle: '要件確認 (Transfer Requirements)',
@@ -93,6 +97,10 @@ export const translations = {
     duplicateWarning: 'is already registered in this term.',
     inputError: 'Please enter course code and course name.',
     termTotal: 'Total',
+    addTermBtn: 'Add Term/Quarter',
+    selectTermLabel: 'Select Quarter to Add',
+    deleteTermBtn: 'Delete Quarter',
+    deleteTermConfirm: 'Are you sure you want to delete this quarter and all its registered courses?',
     
     // Requirements
     reqTitle: 'Transfer Requirements',
