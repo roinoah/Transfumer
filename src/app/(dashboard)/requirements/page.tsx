@@ -640,28 +640,30 @@ export default function RequirementsPage() {
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-500">
                 {univ} - {t('selectMajor')}
               </label>
-              <div className="flex flex-wrap gap-3">
-                {univMajors.map((major) => {
-                  const isChecked = selectedForThisUniv.includes(major);
-                  return (
-                    <label
-                      key={major}
-                      className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-bold cursor-pointer transition-all duration-200 select-none shadow-sm ${
-                        isChecked
-                          ? 'bg-indigo-50/70 border-indigo-500 text-indigo-800 shadow-indigo-500/5'
-                          : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
-                      }`}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={isChecked}
-                        onChange={() => toggleMajorForUniv(univ, major)}
-                        className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-slate-300 cursor-pointer"
-                      />
-                      <span>{major}</span>
-                    </label>
-                  );
-                })}
+              <div className="max-h-[160px] overflow-y-auto pr-1.5 custom-scrollbar">
+                <div className="flex flex-wrap gap-2.5 p-0.5">
+                  {univMajors.map((major) => {
+                    const isChecked = selectedForThisUniv.includes(major);
+                    return (
+                      <label
+                        key={major}
+                        className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl border text-sm font-bold cursor-pointer transition-all duration-200 select-none shadow-sm ${
+                          isChecked
+                            ? 'bg-indigo-50/70 border-indigo-500 text-indigo-800 shadow-indigo-500/5'
+                            : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={() => toggleMajorForUniv(univ, major)}
+                          className="rounded text-indigo-600 focus:ring-indigo-500 h-4 w-4 border-slate-300 cursor-pointer"
+                        />
+                        <span>{major}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           );
