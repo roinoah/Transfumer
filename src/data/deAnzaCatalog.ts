@@ -134,7 +134,7 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
   "English/Writing (EWRT)": [
     { code: "ENGL C1000", name: "Academic Reading and Writing", units: 5.0, description: "Statewide common course for academic reading, composition, and research." },
     { code: "ENGL C1000H", name: "ENGL C1000H (Honors)", units: 5.0, description: "Comprehensive study of key topics and concepts in ENGL." },
-    { code: "ENGL C1001", name: "Critical Thinking and Composition", units: 5.0, description: "Statewide common course for critical reading, reasoning, and argumentative writing." },
+    { code: "ENGL C1001", name: "Critical Thinking and Writing", units: 5.0, description: "Statewide common course for critical reading, reasoning, and argumentative writing." },
     { code: "ENGL C1001H", name: "ENGL C1001H (Honors)", units: 5.0, description: "Comprehensive study of key topics and concepts in ENGL." },
     { code: "EWRT 1A", name: "Introduction to College Composition", units: 5.0, description: "Development of college-level expository writing, reading, and research." },
     { code: "EWRT 1B", name: "Reading, Writing and Research", units: 5.0, description: "Instruction in critical reading and writing about literature and research." },
