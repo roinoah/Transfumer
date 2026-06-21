@@ -15,9 +15,8 @@ export default function RequirementsPage() {
     'UC Berkeley': ['Computer Science']
   });
 
-  // Search and Tab Filter state variables
+  // Search state variable
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'all' | 'major' | 'igetc'>('all');
 
   // Find unique colleges
   const colleges = useMemo(() => Array.from(new Set(mockRequirements.map(r => r.fromCollege))), []);
@@ -112,6 +111,11 @@ export default function RequirementsPage() {
 
     matchingReqs.forEach(req => {
       req.courses.forEach(course => {
+        // Skip general education / IGETC / Cal-GETC courses
+        if (course.category === 'IGETC') {
+          return;
+        }
+
         const existing = courseMap.get(course.code);
         const sourceEntry = {
           university: req.toUniversity,
@@ -148,23 +152,17 @@ export default function RequirementsPage() {
     };
   }, [selectedCollege, selectedUnivs, selectedMajorsByUniv]);
 
-  // Filter courses by search and active tab
+  // Filter courses by search
   const filteredCourses = useMemo(() => {
     if (!combinedRequirement) return [];
     
     return combinedRequirement.courses.filter(course => {
-      const matchesSearch = 
+      return (
         course.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.name.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesTab = 
-        activeTab === 'all' ||
-        (activeTab === 'major' && course.category === 'MajorPrep') ||
-        (activeTab === 'igetc' && course.category === 'IGETC');
-      
-      return matchesSearch && matchesTab;
+        course.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     });
-  }, [combinedRequirement, searchQuery, activeTab]);
+  }, [combinedRequirement, searchQuery]);
 
   // Statistics calculations
   const stats = useMemo(() => {
@@ -292,35 +290,7 @@ export default function RequirementsPage() {
           {/* List Section (Left/Middle) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Filter toolbar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              {/* Tab Filters */}
-              <div className="flex bg-slate-100 p-1 rounded-xl">
-                <button
-                  onClick={() => setActiveTab('all')}
-                  className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
-                    activeTab === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  {t('allTab')}
-                </button>
-                <button
-                  onClick={() => setActiveTab('major')}
-                  className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
-                    activeTab === 'major' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  {t('majorTab')}
-                </button>
-                <button
-                  onClick={() => setActiveTab('igetc')}
-                  className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 cursor-pointer ${
-                    activeTab === 'igetc' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  {t('igetcTab')}
-                </button>
-              </div>
-
+            <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4">
               {/* Search Box */}
               <div className="relative">
                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
