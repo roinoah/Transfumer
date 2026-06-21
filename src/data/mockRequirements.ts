@@ -769,7 +769,7 @@ export const mockRequirements: TransferRequirement[] = [
 
   {
     fromCollege: 'De Anza College',
-    toUniversity: 'University of California, Berkeley',
+    toUniversity: 'UC Berkeley',
     major: 'Chemical Engineering',
     courses: [
       { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Regular Series', satisfies: { code: 'CHEM 1A', name: 'General Chemistry' } },
@@ -1258,7 +1258,7 @@ export const mockRequirements: TransferRequirement[] = [
 
   {
     fromCollege: 'De Anza College',
-    toUniversity: 'University of California, Los Angeles',
+    toUniversity: 'UCLA',
     major: 'Computer Science',
     courses: [
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Introduction to Computer Science II', satisfies: { code: 'COM SCI 32', name: 'Introduction to Computer Science II' } },
@@ -1305,7 +1305,7 @@ export const mockRequirements: TransferRequirement[] = [
 
   {
     fromCollege: 'De Anza College',
-    toUniversity: 'University of California, Los Angeles',
+    toUniversity: 'UCLA',
     major: 'Computer Science and Engineering/B.S.',
     courses: [
       { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 31 Equivalency', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },

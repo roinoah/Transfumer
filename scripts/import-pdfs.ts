@@ -288,6 +288,17 @@ async function main() {
         });
       }
 
+      // Normalize university names to keep database consistent
+      if (reqData && reqData.toUniversity) {
+        let univ = reqData.toUniversity.trim();
+        if (univ.includes('Berkeley') || univ === 'UCB') {
+          univ = 'UC Berkeley';
+        } else if (univ.includes('Los Angeles') || univ === 'UCLA') {
+          univ = 'UCLA';
+        }
+        reqData.toUniversity = univ;
+      }
+
       console.log(`Successfully parsed major: "${reqData.major}" for university: "${reqData.toUniversity}"`);
       const key = `${reqData.fromCollege}|${reqData.toUniversity}|${reqData.major}`;
       requirementsMap.set(key, reqData);
