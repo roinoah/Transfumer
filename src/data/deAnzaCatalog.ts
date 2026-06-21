@@ -103,6 +103,7 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
     { code: "CIS 22A", name: "Beginning Programming Methodologies in C++", units: 4.5, description: "Introduction to computer programming and problem solving in C++." },
     { code: "CIS 22B", name: "Intermediate Programming Methodologies in C++", units: 4.5, description: "Object-oriented programming, classes, pointers, and file processing in C++." },
     { code: "CIS 22C", name: "Data Abstraction and Structures", units: 4.5, description: "Advanced data structures, linked lists, trees, graphs, and sorting algorithms." },
+    { code: "CIS 26B", name: "Advanced C Programming", units: 4.5, description: "Advanced C programming concepts, structural programming, memory allocation and pointer arrays." },
     { code: "CIS 35A", name: "Java Programming", units: 4.5, description: "Object-oriented software development in Java." },
     { code: "CIS 36A", name: "Introduction to Computer Science Using Java", units: 4.5, description: "Basic concepts of computer science and java programming." },
     { code: "CIS 40", name: "Introduction to Programming in Python", units: 4.5, description: "Beginning programming, variable types, loops and functions in Python." },
@@ -124,7 +125,8 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
     { code: "ECON 5", name: "Principles of Microeconomics", units: 4.0, description: "Comprehensive study of key topics and concepts in ECON." }
   ],
   "Engineering (ENGR)": [
-    { code: "ENGR 37", name: "Introduction to Circuit Analysis", units: 5.0, description: "Introduction to circuit analysis, network theorems, and AC circuits." }
+    { code: "ENGR 37", name: "Introduction to Circuit Analysis", units: 5.0, description: "Introduction to circuit analysis, network theorems, and AC circuits." },
+    { code: "ENGR 37L", name: "Introduction to Circuit Analysis Laboratory", units: 2.0, description: "Laboratory instruction for introduction to circuit analysis." }
   ],
   "English as a Second Language (ESL)": [
     { code: "ESL 5", name: "English as a Second Language 5", units: 5.0, description: "Comprehensive study of key topics and concepts in English as a Second Language." },
@@ -133,7 +135,7 @@ export const deAnzaCatalog: Record<string, CatalogCourse[]> = {
   "English/Writing (EWRT)": [
     { code: "ENGL C1000", name: "Academic Reading and Writing", units: 5.0, description: "Statewide common course for academic reading, composition, and research." },
     { code: "ENGL C1000H", name: "ENGL C1000H (Honors)", units: 5.0, description: "Comprehensive study of key topics and concepts in ENGL." },
-    { code: "ENGL C1001", name: "Critical Thinking and Composition", units: 5.0, description: "Statewide common course for critical reading, reasoning, and argumentative writing." },
+    { code: "ENGL C1001", name: "Critical Thinking and Writing", units: 5.0, description: "Statewide common course for critical reading, reasoning, and argumentative writing." },
     { code: "ENGL C1001H", name: "ENGL C1001H (Honors)", units: 5.0, description: "Comprehensive study of key topics and concepts in ENGL." },
     { code: "EWRT 1A", name: "Introduction to College Composition", units: 5.0, description: "Development of college-level expository writing, reading, and research." },
     { code: "EWRT 1B", name: "Reading, Writing and Research", units: 5.0, description: "Instruction in critical reading and writing about literature and research." },

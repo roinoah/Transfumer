@@ -893,20 +893,35 @@ export default function RequirementsPage() {
 
                     const selectedId = selectedOrCourses[groupName] || (options[0] ? getOptionId(options[0]) : '');
 
+                    const isGroupRequired = options.some(opt => {
+                      if (opt.type === 'single') return opt.course.type === 'Required';
+                      if (opt.type === 'andGroup') return opt.courses.some(c => c.type === 'Required');
+                      return false;
+                    });
+
                     return (
                       <div 
                         key={groupName}
                         className="bg-gradient-to-br from-slate-50/80 to-indigo-50/10 border border-dashed border-indigo-200/80 p-6 rounded-2xl shadow-sm space-y-4"
                       >
                         {/* Group Header */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-between flex-wrap gap-3">
+                          <div className="flex items-center gap-2.5 flex-wrap">
                             <span className="p-1 bg-indigo-100 text-indigo-700 rounded-lg">
                               <Sparkles className="h-4 w-4 text-indigo-600" />
                             </span>
                             <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                               {t('completeOneOption')}
                             </span>
+                            {isGroupRequired ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/10">
+                                {t('required')}
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                {t('recommended')}
+                              </span>
+                            )}
                           </div>
                           <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-[10px] font-bold text-indigo-600">
                             {groupName}
