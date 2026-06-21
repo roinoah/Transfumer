@@ -98,6 +98,7 @@ Important parsing rules:
 2. If multiple courses are required together to satisfy a requirement (e.g., De Anza's MATH 1B & 1C satisfies UCB's MATH 52), list them as separate courses in the array, but make sure they have the same "satisfies" target (and if inside an OR selection, they should also share the same "orGroup" name).
 3. If the agreement lists "No Course Articulated" for a university course, do not add a De Anza course for it.
 4. Set the "type" field carefully: "Required" for required courses, "Highly Recommended" for strongly/highly recommended courses, and "Recommended" for other recommended courses.
+5. Do not include Honors courses (e.g. courses with "Honors" in their name or course codes ending in "H"). Only extract the regular versions of the courses.
 
 Agreement Text:
 ${text}`;
@@ -277,15 +278,22 @@ async function main() {
       const reqData = await parseAgreementWithLLM(parsedPdfText.text);
       await parser.destroy();
 
-      // Coerce common LLM naming mistakes
+      // Coerce common LLM naming mistakes and filter out honors courses
       if (reqData && reqData.courses) {
-        reqData.courses = reqData.courses.map(c => {
-          let typeStr = c.type as string;
-          if (typeStr === 'Strongly Recommended') {
-            typeStr = 'Highly Recommended';
-          }
-          return { ...c, type: typeStr as 'Required' | 'Recommended' | 'Highly Recommended' };
-        });
+        reqData.courses = reqData.courses
+          .filter(c => {
+            const code = c.code.trim();
+            const name = c.name.toLowerCase();
+            const isHonors = code.endsWith('H') || name.includes('honors');
+            return !isHonors;
+          })
+          .map(c => {
+            let typeStr = c.type as string;
+            if (typeStr === 'Strongly Recommended') {
+              typeStr = 'Highly Recommended';
+            }
+            return { ...c, type: typeStr as 'Required' | 'Recommended' | 'Highly Recommended' };
+          });
       }
 
       // Normalize university names to keep database consistent
