@@ -769,7 +769,7 @@ export const mockRequirements: TransferRequirement[] = [
 
   {
     fromCollege: 'De Anza College',
-    toUniversity: 'University of California, Berkeley',
+    toUniversity: 'UC Berkeley',
     major: 'Chemical Engineering',
     courses: [
       { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'General Chemistry Regular Series', satisfies: { code: 'CHEM 1A', name: 'General Chemistry' } },
@@ -1258,7 +1258,7 @@ export const mockRequirements: TransferRequirement[] = [
 
   {
     fromCollege: 'De Anza College',
-    toUniversity: 'University of California, Los Angeles',
+    toUniversity: 'UCLA',
     major: 'Computer Science',
     courses: [
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Introduction to Computer Science II', satisfies: { code: 'COM SCI 32', name: 'Introduction to Computer Science II' } },
@@ -1300,6 +1300,57 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Introduction to Computer Science I', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
       { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Introduction to Computer Science I', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
       { code: 'CIS 22BH', name: 'Intermediate Programming Methodologies in C++ - HONORS', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Introduction to Computer Science I', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } }
+    ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UCLA',
+    major: 'Computer Science and Engineering/B.S.',
+    courses: [
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 31 Equivalency', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
+      { code: 'CIS 22BH', name: 'Intermediate Programming Methodologies in C++ - HONORS', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 31 Equivalency', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
+      { code: 'CIS 29', name: 'Advanced C++ Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 31 Equivalency', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
+      { code: 'CIS 27', name: 'Programming in C++ for C/Java Programmers', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 31 Equivalency', satisfies: { code: 'COM SCI 31', name: 'Introduction to Computer Science I' } },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 32 Equivalency', satisfies: { code: 'COM SCI 32', name: 'Introduction to Computer Science II' } },
+      { code: 'CIS 22CH', name: 'Data Abstraction and Structures - HONORS', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'COM SCI 32 Equivalency', satisfies: { code: 'COM SCI 32', name: 'Introduction to Computer Science II' } },
+      { code: 'CIS 21JA', name: 'Introduction to x86 Processor Assembly Language and Computer Architecture', units: 4.5, type: 'Required', category: 'MajorPrep', satisfies: { code: 'COM SCI 33', name: 'Introduction to Computer Organization' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31A Equivalency', satisfies: { code: 'MATH 31A', name: 'Differential and Integral Calculus' } },
+      { code: 'MATH 1AH', name: 'Calculus I - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31A Equivalency', satisfies: { code: 'MATH 31A', name: 'Differential and Integral Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 1', satisfies: { code: 'MATH 31B', name: 'Integration and Infinite Series' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 1', satisfies: { code: 'MATH 32A', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 2', satisfies: { code: 'MATH 31B', name: 'Integration and Infinite Series' } },
+      { code: 'MATH 1CH', name: 'Calculus III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 2', satisfies: { code: 'MATH 32A', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 3', satisfies: { code: 'MATH 31B', name: 'Integration and Infinite Series' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 3', satisfies: { code: 'MATH 32A', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 1BH', name: 'Calculus II - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 4', satisfies: { code: 'MATH 31B', name: 'Integration and Infinite Series' } },
+      { code: 'MATH 1CH', name: 'Calculus III - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 31B & 32A Equivalency Group 4', satisfies: { code: 'MATH 32A', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 32B Equivalency', satisfies: { code: 'MATH 32B', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 1DH', name: 'Calculus IV - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 32B Equivalency', satisfies: { code: 'MATH 32B', name: 'Calculus of Several Variables' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 33A Equivalency', satisfies: { code: 'MATH 33A', name: 'Linear Algebra and Applications' } },
+      { code: 'MATH 2BH', name: 'Linear Algebra - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 33A Equivalency', satisfies: { code: 'MATH 33A', name: 'Linear Algebra and Applications' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 33B Equivalency', satisfies: { code: 'MATH 33B', name: 'Differential Equations' } },
+      { code: 'MATH 2AH', name: 'Differential Equations - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 33B Equivalency', satisfies: { code: 'MATH 33B', name: 'Differential Equations' } },
+      { code: 'MATH 22', name: 'Discrete Mathematics', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 61 Equivalency', satisfies: { code: 'MATH 61', name: 'Introduction to Discrete Structures' } },
+      { code: 'MATH 22H', name: 'Discrete Mathematics - HONORS', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 61 Equivalency', satisfies: { code: 'MATH 61', name: 'Introduction to Discrete Structures' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 1A', name: 'Physics for Scientists and Engineers: Mechanics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 4AL', name: 'Physics Laboratory for Scientists and Engineers: Mechanics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 1B', name: 'Physics for Scientists and Engineers: Oscillations, Waves, Electric and Magnetic Fields' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 4BL', name: 'Physics Laboratory for Scientists and Engineers: Electricity and Magnetism' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 1C', name: 'Physics for Scientists and Engineers: Electrodynamics, Optics, and Special Relativity' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'IGETC Area 1A Equivalency', satisfies: { code: 'ENGCOMP 3', name: 'English Composition, Rhetoric, and Language' } },
+      { code: 'ENGL C1000H', name: 'Academic Reading and Writing - HONORS', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'IGETC Area 1A Equivalency', satisfies: { code: 'ENGCOMP 3', name: 'English Composition, Rhetoric, and Language' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'EWRT 1BH', name: 'Reading, Writing and Research - HONORS', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'ENGL C1001', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'PHIL 3', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Satisfies general critical thinking/writing requirement.', orGroup: 'IGETC Area 1B Equivalency' },
+      { code: 'CIS 27', name: 'Programming in C++ for C/Java Programmers', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'General Programming Requirement' },
+      { code: 'CIS 29', name: 'Advanced C++ Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'General Programming Requirement' },
+      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'General Programming Requirement' },
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'General Programming Requirement' },
+      { code: 'CIS 22BH', name: 'Intermediate Programming Methodologies in C++ - HONORS', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'General Programming Requirement' }
     ]
   }
 ];
