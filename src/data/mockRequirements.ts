@@ -6,6 +6,11 @@ export interface Course {
   category: 'IGETC' | 'MajorPrep';
   description?: string;
   isOverlap?: boolean;
+  orGroup?: string;
+  satisfies?: {
+    code: string;
+    name: string;
+  };
 }
 
 export interface TransferRequirement {
@@ -28,6 +33,7 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Recommended', category: 'MajorPrep', description: 'Introduction to computer programming.' },
       { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Object-oriented programming in C++.' },
       { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', description: 'Advanced structures and abstract data types.' },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC', description: 'Expositing writing, reading and research.' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC', description: 'Argumentative writing and textual analysis.' },
       { code: 'PHIL 1', name: 'Introduction to Philosophy', units: 4.0, type: 'Recommended', category: 'IGETC', description: 'Survey of principal philosophical themes.' }
@@ -61,10 +67,26 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
       { code: 'PHYS 4A', name: 'Physics: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
       { code: 'PHYS 4B', name: 'Physics: Electricity & Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep' },
-      { code: 'PHYS 4C', name: 'Physics: Fluids, Waves & Optics', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIOLOGY 1A & 1AL', name: 'General Biology and Lab' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIOLOGY 1A & 1AL', name: 'General Biology and Lab' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIOLOGY 1B', name: 'General Biology' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 6C', name: 'Evolution, Systematics and Ecology', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIOLOGY 1B', name: 'General Biology' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 1A', name: 'General Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 1A & 1AL & 1B', name: 'General Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 1B', name: 'General Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 1A & 1AL & 1B', name: 'General Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 1C', name: 'General Chemistry and Qualitative Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 1A & 1AL & 1B', name: 'General Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 12A', name: 'Organic Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 3A & 3AL', name: 'Organic Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 12B', name: 'Organic Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 3A & 3AL', name: 'Organic Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 12B', name: 'Organic Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 3B & 3BL', name: 'Organic Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'CHEM 12C', name: 'Organic Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 3B & 3BL', name: 'Organic Chemistry' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 40A', name: 'Human Anatomy and Physiology', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MCELLBI 32 & 32L', name: 'Human Physiology' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 40B', name: 'Human Anatomy and Physiology', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MCELLBI 32 & 32L', name: 'Human Physiology' }, orGroup: 'EECS Science Elective' },
+      { code: 'BIOL 40C', name: 'Human Anatomy and Physiology', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MCELLBI 32 & 32L', name: 'Human Physiology' }, orGroup: 'EECS Science Elective' },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Waves, Fluids, and Optics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7C', name: 'Physics for Scientists and Engineers' }, orGroup: 'EECS Science Elective' },
+      { code: 'PHYS 4D', name: 'Physics for Scientists and Engineers: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYSICS 7C', name: 'Physics for Scientists and Engineers' }, orGroup: 'EECS Science Elective' },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to circuit analysis, network theorems, and AC circuits.' },
       { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
-      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
-      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
       { code: 'EWRT 2', name: 'Critical Thinking and Writing', units: 5.0, type: 'Required', category: 'IGETC' }
     ]
@@ -393,6 +415,130 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep' },
       { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
       { code: 'CHEM 1A', name: 'General Chemistry', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+
+  // ================= UC SAN DIEGO MAJORS =================
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Computer Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Data Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+
+  // ================= UC IRVINE MAJORS =================
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Irvine',
+    major: 'Computer Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 22', name: 'Discrete Mathematics', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Irvine',
+    major: 'Business Administration',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 10', name: 'Introductory Statistics', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'ECON 1A', name: 'Principles of Macroeconomics', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'ECON 1B', name: 'Principles of Microeconomics', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'ACCT 1A', name: 'Financial Accounting I', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'ACCT 1B', name: 'Financial Accounting II', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+
+  // ================= UC DAVIS MAJORS =================
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Computer Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'PHYS 4A', name: 'Physics: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'PHYS 4B', name: 'Physics: Electricity & Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+
+  // ================= UC SANTA BARBARA MAJORS =================
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Santa Barbara',
+    major: 'Computer Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'PHYS 4A', name: 'Physics: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'PHYS 4B', name: 'Physics: Electricity & Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
+      { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
+    ]
+  },
+
+  // ================= UC SANTA CRUZ MAJORS =================
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Santa Cruz',
+    major: 'Computer Science',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22A', name: 'Beginning C++', units: 4.5, type: 'Recommended', category: 'MajorPrep' },
+      { code: 'CIS 22B', name: 'Intermediate C++', units: 4.5, type: 'Required', category: 'MajorPrep' },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep' },
       { code: 'EWRT 1A', name: 'English Composition', units: 5.0, type: 'Required', category: 'IGETC' },
       { code: 'EWRT 2', name: 'Critical Thinking', units: 5.0, type: 'Required', category: 'IGETC' }
     ]
