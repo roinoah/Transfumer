@@ -1741,5 +1741,27 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 MATLAB Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
       { code: 'CIS 41B', name: 'Advanced Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 MATLAB Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Structural Engineering with a Specialization in Aerospace Structures B.S.',
+    courses: [
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6A', name: 'General Chemistry I' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, satisfies: { code: 'PHYS 2CL', name: 'Physics Laboratory - Electricity and Magnetism' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, satisfies: { code: 'PHYS 2BL', name: 'Physics Laboratory - Mechanics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20C and 20E Selection', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20C and 20E Selection', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20C and 20E Selection', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20C and 20E Selection', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } }
+    ]
   }
 ];
