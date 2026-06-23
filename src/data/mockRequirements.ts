@@ -1421,5 +1421,48 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'BIOL 6C', name: 'Ecology and Evolution', units: 6.0, type: 'Recommended', category: 'MajorPrep', satisfies: { code: 'BIS 002B', name: 'Introduction to Biology: Principles of Ecology & Evolution' } },
       { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Recommended', category: 'MajorPrep', satisfies: { code: 'BIS 002C', name: 'Introduction to Biology: Biodiversity & the Tree of Life' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Computer Engineering B.S.',
+    courses: [
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MAT 022A Linear Algebra', satisfies: { code: 'MAT 022A', name: 'Linear Algebra' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MAT 022B Differential Equations', satisfies: { code: 'MAT 022B', name: 'Differential Equations' } },
+      { code: 'ACCT 1A', name: 'Financial Accounting I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MGT 011A Accounting', satisfies: { code: 'MGT 011A', name: 'Elementary Accounting' } },
+      { code: 'ACCT 1B', name: 'Financial Accounting II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MGT 011A Accounting', satisfies: { code: 'MGT 011A', name: 'Elementary Accounting' } },
+      { code: 'ACCT 1C', name: 'Managerial Accounting', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MGT 011B Accounting', satisfies: { code: 'MGT 011B', name: 'Elementary Accounting' } },
+      { code: 'ENGR 35', name: 'Statics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 035', name: 'Statics' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHE 002C', name: 'General Chemistry' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009C', name: 'Classical Physics' } },
+      { code: 'COMM C1000', name: 'Introduction to Public Speaking', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CMN 001', name: 'Introduction to Public Speaking' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'ENL 003 Literature', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'ENL 003 Literature', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Academic Literacies', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Academic Literacies', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Academic Literacies', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Academic Literacies', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'NAIS 15', name: 'Ethnic Studies and Native American Literature', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'NAS 005', name: 'Introduction to Native American Literature' } },
+      { code: 'ELIT 39', name: 'Contemporary Literature', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'COM 004', name: 'Major Works of the Contemporary World' } },
+      { code: 'MATH 22', name: 'Discrete Mathematics', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECS 020', name: 'Discrete Mathematics For Computer Science' } },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECS 036C', name: 'Data Structures, Algorithms, & Programming' } },
+      { code: 'CIS 26B', name: 'Advanced C Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 26A', name: 'C as a Second Programming Language', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 27', name: 'Programming in C++ for C/Java Programmers', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 36A', name: 'Introduction to Computer Programming Using Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036A Programming', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 36B', name: 'Intermediate Problem Solving in Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036B Programming', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036B Programming', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036B Programming', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 29', name: 'Advanced C++ Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 036B Programming', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 017', name: 'Circuits I' } }
+    ]
   }
 ];
