@@ -1763,5 +1763,30 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
       { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Bioengineering: Bioinformatics B.S.',
+    courses: [
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6A', name: 'General Chemistry I' } },
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6B', name: 'General Chemistry II' } },
+      { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Biology Core Series', satisfies: { code: 'BILD 1/3/4', name: 'The Cell/Organismic and Evolutionary Biology/Introductory Biology Lab' } },
+      { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Biology Core Series', satisfies: { code: 'BILD 1/3/4', name: 'The Cell/Organismic and Evolutionary Biology/Introductory Biology Lab' } },
+      { code: 'BIOL 6C', name: 'Ecology and Evolution', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Biology Core Series', satisfies: { code: 'BILD 1/3/4', name: 'The Cell/Organismic and Evolutionary Biology/Introductory Biology Lab' } },
+      { code: 'CIS 36B', name: 'Intermediate Problem Solving in Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Programming Selection', satisfies: { code: 'CSE 11', name: 'Introduction to Programming and Computational Problem Solving - Accelerated Pace' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Programming Selection', satisfies: { code: 'CSE 11', name: 'Introduction to Programming and Computational Problem Solving - Accelerated Pace' } },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CSE 12', name: 'Basic Data Structures and Object-Oriented Design' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Calculus C/E Series', satisfies: { code: 'MATH 20C/E', name: 'Calculus and Analytic Geometry for Science and Engineering / Vector Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Calculus C/E Series', satisfies: { code: 'MATH 20C/E', name: 'Calculus and Analytic Geometry for Science and Engineering / Vector Calculus' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } }
+    ]
   }
 ];
