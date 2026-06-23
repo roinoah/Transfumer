@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "import-pdfs": "tsx scripts/import-pdfs.ts",
-    "import-urls": "tsx scripts/import-urls.ts"
+    "import-urls": "tsx scripts/import-urls.ts",
+    "import-assist": "tsx scripts/import-assist.ts"
   },
   "dependencies": {
     "lucide-react": "^1.18.0",
