@@ -943,20 +943,35 @@ export default function RequirementsPage() {
 
                     const selectedId = selectedOrCourses[groupName] || (options[0] ? getOptionId(options[0]) : '');
 
+                    const isGroupRequired = options.some(opt => {
+                      if (opt.type === 'single') return opt.course.type === 'Required';
+                      if (opt.type === 'andGroup') return opt.courses.some(c => c.type === 'Required');
+                      return false;
+                    });
+
                     return (
                       <div 
                         key={groupName}
                         className="bg-slate-50/50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4"
                       >
                         {/* Group Header */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-between flex-wrap gap-3">
+                          <div className="flex items-center gap-2.5 flex-wrap">
                             <span className="p-1 bg-slate-200/80 text-slate-700 rounded-lg">
                               <Sparkles className="h-4 w-4 text-slate-650" />
                             </span>
                             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                               {t('completeOneOption')}
                             </span>
+                            {isGroupRequired ? (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/50">
+                                {t('required')}
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-550 border border-slate-200">
+                                {t('recommended')}
+                              </span>
+                            )}
                           </div>
                           <span className="px-2 py-0.5 bg-slate-200/60 border border-slate-300/40 rounded-full text-[10px] font-bold text-slate-600">
                             {groupName}
