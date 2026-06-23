@@ -1314,5 +1314,51 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus Series Completion', satisfies: { code: 'MAT 021C, MAT 021D', name: 'Calculus Series' } },
       { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus Series Completion', satisfies: { code: 'MAT 021C, MAT 021D', name: 'Calculus Series' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Computer Science & Engineering B.S.',
+    courses: [
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022A', name: 'Linear Algebra' } },
+      { code: 'COMM C1000', name: 'Introduction to Public Speaking', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CMN 001', name: 'Introduction to Public Speaking' } },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 017', name: 'Circuits I' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022B', name: 'Differential Equations' } },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Data Structures Selection', satisfies: { code: 'ECS 032B', name: 'Introduction to Data Structures' } },
+      { code: 'CIS 22C', name: 'Data Abstraction and Structures', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Data Structures Selection', satisfies: { code: 'ECS 036C', name: 'Data Structures, Algorithms, & Programming' } },
+      { code: 'CIS 26B', name: 'Advanced C Programming', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 26A', name: 'C as a Second Programming Language', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 27', name: 'Programming in C++ for C/Java Programmers', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 36A', name: 'Introduction to Computer Programming Using Java', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'Programming Selection', satisfies: { code: 'ECS 036A', name: 'Programming & Problem Solving' } },
+      { code: 'CIS 36B', name: 'Intermediate Problem Solving in Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Object-Oriented Selection', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Object-Oriented Selection', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 22B', name: 'Intermediate Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Object-Oriented Selection', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 29', name: 'Advanced C++ Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Object-Oriented Selection', satisfies: { code: 'ECS 036B', name: 'Software Development & Object-Oriented Programming in C++' } },
+      { code: 'CIS 41A', name: 'Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Intro Programming Selection', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } },
+      { code: 'CIS 36A', name: 'Introduction to Computer Programming Using Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Intro Programming Selection', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } },
+      { code: 'CIS 21JA', name: 'Introduction to x86 Processor Assembly Language and Computer Architecture', units: 4.5, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECS 050', name: 'Computer Organization & Machine-Dependent Programming' } },
+      { code: 'MATH 22', name: 'Discrete Mathematics', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECS 020', name: 'Discrete Mathematics For Computer Science' } },
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHE 002A', name: 'General Chemistry' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009C', name: 'Classical Physics' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } },
+      { code: 'PHYS 4D', name: 'Physics for Scientists and Engineers: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009D', name: 'Modern Physics' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus Series', satisfies: { code: 'MAT 021C', name: 'Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus Series', satisfies: { code: 'MAT 021D', name: 'Calculus' } },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'IGETC', isOverlap: true, orGroup: 'Literature Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', isOverlap: true, orGroup: 'Literature Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'NAIS 15', name: 'Ethnic Studies and Native American Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'NAS 005', name: 'Introduction to Native American Literature' } },
+      { code: 'ELIT 39', name: 'Contemporary Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'COM 004', name: 'Major Works of the Contemporary World' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'IGETC', isOverlap: true, orGroup: 'Academic Literacies Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'Academic Literacies Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', isOverlap: true, orGroup: 'Academic Literacies Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'Academic Literacies Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } }
+    ]
   }
 ];
