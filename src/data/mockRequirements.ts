@@ -1788,5 +1788,35 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
       { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Bioengineering: Biotechnology B.S.',
+    courses: [
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20E/20C Selection', satisfies: { code: 'MATH 20E/20C', name: 'Vector Calculus / Calculus and Analytic Geometry' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'MATH 20E/20C Selection', satisfies: { code: 'MATH 20E/20C', name: 'Vector Calculus / Calculus and Analytic Geometry' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'CIS 22A', name: 'Beginning Programming Methodologies in C++', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
+      { code: 'CIS 41A', name: 'Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
+      { code: 'CIS 40', name: 'Introduction to Programming in Python', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
+      { code: 'CIS 35A', name: 'Java Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
+      { code: 'CIS 41B', name: 'Advanced Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'MAE 8 Selection', satisfies: { code: 'MAE 8', name: 'MATLAB Programming for Engineering Analysis' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', isOverlap: true, satisfies: { code: 'PHYS 2B / 2CL', name: 'Physics - Electricity and Magnetism / Lab' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'CHEM 6B/7L Selection', satisfies: { code: 'CHEM 6B / 7L', name: 'General Chemistry II / Lab' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', isOverlap: true, orGroup: 'CHEM 6C/7L Selection', satisfies: { code: 'CHEM 6C / 7L', name: 'General Chemistry III / Lab' } },
+      { code: 'CHEM 12B', name: 'Organic Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 41B', name: 'Organic Chemistry II: Reactivity and Synthesis' } },
+      { code: 'CHEM 12A', name: 'Organic Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 41A', name: 'Organic Chemistry I: Structure and Reactivity' } },
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6A', name: 'General Chemistry I' } },
+      { code: 'BIOL 6A', name: 'Form and Function in the Biological World', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'BILD 1 Selection', satisfies: { code: 'BILD 1', name: 'The Cell' } },
+      { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'BILD 1 Selection', satisfies: { code: 'BILD 1', name: 'The Cell' } },
+      { code: 'BIOL 6C', name: 'Ecology and Evolution', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'BILD 1 Selection', satisfies: { code: 'BILD 1', name: 'The Cell' } }
+    ]
   }
 ];
