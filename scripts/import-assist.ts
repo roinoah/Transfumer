@@ -261,11 +261,33 @@ function buildTextSummary(majorName: string, assets: any[], articulations: any[]
         } else if (sec.type === 'Section') {
           sec.rows.forEach((row: any) => {
             row.cells.forEach((cell: any) => {
-              if (cell.type === 'Course') {
-                const rc = cell.course;
+              if (cell.type === 'Course' || cell.type === 'Series') {
+                let coursePrefix = '';
+                let courseNumber = '';
+                let courseTitle = '';
+                let minUnits = 0;
+
+                if (cell.type === 'Course') {
+                  const rc = cell.course;
+                  coursePrefix = rc.prefix;
+                  courseNumber = rc.courseNumber;
+                  courseTitle = rc.courseTitle;
+                  minUnits = rc.minUnits;
+                } else {
+                  const s = cell.series;
+                  coursePrefix = '';
+                  courseNumber = '';
+                  courseTitle = s.name;
+                  minUnits = s.courses.reduce((sum: number, c: any) => sum + (c.minUnits || 0), 0);
+                }
+
                 const matchArt = articulations.find((a: any) => a.templateCellId === cell.id);
                 
-                summary += `UC Davis Course: ${rc.prefix} ${rc.courseNumber} - ${rc.courseTitle} (${rc.minUnits} units)\n`;
+                if (cell.type === 'Course') {
+                  summary += `UC Davis Course: ${coursePrefix} ${courseNumber} - ${courseTitle} (${minUnits} units)\n`;
+                } else {
+                  summary += `UC Davis Course Series: ${courseTitle} (${minUnits} units total)\n`;
+                }
                 
                 if (matchArt && matchArt.articulation) {
                   const sa = matchArt.articulation.sendingArticulation;
@@ -352,23 +374,42 @@ async function main() {
 
       const reqData = await parseAgreementWithLLM(textSummary);
 
-      // Coerce common LLM naming mistakes and filter out honors courses just in case
-      if (reqData && reqData.courses) {
-        reqData.courses = reqData.courses
-          .filter(c => {
-            const code = c.code.trim();
-            const name = c.name.toLowerCase();
-            const isHonors = code.endsWith('H') || name.includes('honors');
-            return !isHonors;
-          })
-          .map(c => {
-            let typeStr = c.type as string;
-            if (typeStr === 'Strongly Recommended') {
-              typeStr = 'Highly Recommended';
-            }
-            return { ...c, type: typeStr as 'Required' | 'Recommended' | 'Highly Recommended' };
-          });
+      if (!reqData) {
+        throw new Error('LLM returned null or empty response.');
       }
+
+      // Fallback keys if LLM naming varies
+      if (!reqData.courses) {
+        const potentialKeys = ['courseList', 'course_list', 'requirements', 'majorPrep', 'major_prep', 'classes'];
+        for (const k of potentialKeys) {
+          if ((reqData as any)[k] && Array.isArray((reqData as any)[k])) {
+            reqData.courses = (reqData as any)[k];
+            break;
+          }
+        }
+      }
+
+      if (!reqData.courses || !Array.isArray(reqData.courses)) {
+        console.error('LLM raw response structure:', JSON.stringify(reqData, null, 2));
+        throw new Error('LLM response is missing the "courses" array.');
+      }
+
+      // Coerce common LLM naming mistakes and filter out honors courses just in case
+      reqData.courses = reqData.courses
+        .filter(c => {
+          if (!c || !c.code) return false;
+          const code = c.code.trim();
+          const name = (c.name || '').toLowerCase();
+          const isHonors = code.endsWith('H') || name.includes('honors');
+          return !isHonors;
+        })
+        .map(c => {
+          let typeStr = c.type as string;
+          if (typeStr === 'Strongly Recommended') {
+            typeStr = 'Highly Recommended';
+          }
+          return { ...c, type: typeStr as 'Required' | 'Recommended' | 'Highly Recommended' };
+        });
 
       // Normalize university, college, and major names
       reqData.toUniversity = 'UC Davis';
