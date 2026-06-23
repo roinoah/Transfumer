@@ -209,8 +209,9 @@ ${requirements.map(serializeRequirement).join(',\n\n')}
 }
 
 // Git operations helper
-function handleGitWorkflow(major: string) {
-  const branchName = 'feat/align-uc-davis-engineering-requirements';
+function handleGitWorkflow(univName: string, major: string) {
+  const slug = univName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const branchName = `feat/align-${slug}-engineering-requirements`;
 
   console.log(`Checking out/switching to branch: ${branchName}...`);
   try {
@@ -228,7 +229,7 @@ function handleGitWorkflow(major: string) {
 
   console.log(`Committing changes...`);
   try {
-    execSync(`git commit -m "feat(requirements): align UC Davis ${major} requirements from Assist"`, { stdio: 'inherit' });
+    execSync(`git commit -m "feat(requirements): align ${univName} ${major} requirements from Assist"`, { stdio: 'inherit' });
   } catch {
     console.log('No changes to commit or commit failed.');
   }
@@ -323,11 +324,19 @@ function buildTextSummary(majorName: string, assets: any[], articulations: any[]
 }
 
 async function main() {
-  const RECEIVING_ID = 89; // UC Davis
-  const SENDING_ID = 113;  // De Anza College
-  const YEAR_ID = 76;      // 2025-2026 Academic Year
+  const RECEIVING_ID = parseInt(process.env.RECEIVING_ID || '89', 10); // Default UC Davis (89)
+  const SENDING_ID = parseInt(process.env.SENDING_ID || '113', 10);    // Default De Anza (113)
+  const YEAR_ID = parseInt(process.env.YEAR_ID || '76', 10);          // Default 2025-2026 (76)
 
-  console.log('Fetching published UC Davis majors list...');
+  // Map receiving ID to university name
+  const UNIV_NAMES: Record<number, string> = {
+    89: 'UC Davis',
+    7: 'UC San Diego',
+    21: 'UC Berkeley'
+  };
+  const toUniversityName = UNIV_NAMES[RECEIVING_ID] || `University ID ${RECEIVING_ID}`;
+
+  console.log(`Fetching published ${toUniversityName} majors list...`);
   const listUrl = `https://prod.assistng.org/articulation/api/Agreements/Published/for/${RECEIVING_ID}/to/${SENDING_ID}/in/${YEAR_ID}?types=Major`;
   const listResponse = await fetch(listUrl);
   if (!listResponse.ok) {
@@ -350,7 +359,7 @@ async function main() {
   for (let i = 0; i < engineeringMajors.length; i++) {
     const majorInfo = engineeringMajors[i];
     const majorName = majorInfo.label;
-    const existingKey = `De Anza College|UC Davis|${majorName}`;
+    const existingKey = `De Anza College|${toUniversityName}|${majorName}`;
     if (requirementsMap.has(existingKey)) {
       console.log(`\n[${i + 1}/${engineeringMajors.length}] Major "${majorName}" already exists in mockRequirements.ts. Skipping...`);
       continue;
@@ -412,7 +421,7 @@ async function main() {
         });
 
       // Normalize university, college, and major names
-      reqData.toUniversity = 'UC Davis';
+      reqData.toUniversity = toUniversityName;
       reqData.fromCollege = 'De Anza College';
       reqData.major = majorName;
 
@@ -429,12 +438,12 @@ async function main() {
       execSync('npm run lint && npm run build', { stdio: 'inherit' });
 
       // Run Git workflow
-      handleGitWorkflow(reqData.major);
+      handleGitWorkflow(toUniversityName, reqData.major);
 
       // Cool down interval to avoid server rate limit
       if (i < engineeringMajors.length - 1) {
-        console.log('Sleeping for 4 seconds before the next request...');
-        await new Promise(resolve => setTimeout(resolve, 4000));
+        console.log('Sleeping for 60 seconds before the next request...');
+        await new Promise(resolve => setTimeout(resolve, 60000));
       }
 
     } catch (error) {
@@ -444,7 +453,7 @@ async function main() {
     }
   }
 
-  console.log('\nAll UC Davis Engineering majors processed successfully!');
+  console.log(`\nAll ${toUniversityName} Engineering majors processed successfully!`);
 }
 
 main().catch(console.error);
