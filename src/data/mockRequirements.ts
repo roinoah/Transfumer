@@ -1818,5 +1818,23 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'BILD 1 Selection', satisfies: { code: 'BILD 1', name: 'The Cell' } },
       { code: 'BIOL 6C', name: 'Ecology and Evolution', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'BILD 1 Selection', satisfies: { code: 'BILD 1', name: 'The Cell' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'ECE: Engineering Physics B.S.',
+    courses: [
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Calculus for Science and Engineering', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Calculus for Science and Engineering', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Calculus and Analytic Geometry/Vector Calculus', orGroup: 'MATH 1C & 1D Group', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Calculus and Analytic Geometry/Vector Calculus', orGroup: 'MATH 1C & 1D Group', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Introduction to Differential Equations', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', description: 'Linear Algebra', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', description: 'Physics - Mechanics', satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', description: 'Physics - Electricity and Magnetism', satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', description: 'Physics - Fluids, Waves, Thermodynamics, and Optics', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } },
+      { code: 'PHYS 4D', name: 'Physics for Scientists and Engineers: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', description: 'Physics - Relativity and Quantum Physics', satisfies: { code: 'PHYS 2D', name: 'Physics - Relativity and Quantum Physics' } }
+    ]
   }
 ];
