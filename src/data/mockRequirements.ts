@@ -1211,5 +1211,35 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'CHEM 12B', name: 'Organic Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Organic Chemistry Series', satisfies: { code: 'CHE 128A, CHE 128B, CHE 128C', name: 'Organic Chemistry Series' } },
       { code: 'CHEM 12C', name: 'Organic Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Organic Chemistry Series', satisfies: { code: 'CHE 128A, CHE 128B, CHE 128C', name: 'Organic Chemistry Series' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Aerospace Science & Engineering B.S.',
+    courses: [
+      { code: 'NAIS 15', name: 'Ethnic Studies and Native American Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'NAS 005', name: 'Introduction to Native American Literature' } },
+      { code: 'ELIT 39', name: 'Contemporary Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'COM 004', name: 'Major Works of the Contemporary World' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'ENL 003 Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'ENL 003 Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'CHE 002A/B Series', satisfies: { code: 'CHE 002A', name: 'General Chemistry' } },
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'CHE 002A/B Series', satisfies: { code: 'CHE 002B', name: 'General Chemistry' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009C', name: 'Classical Physics' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 017', name: 'Circuits I' } },
+      { code: 'ENGR 35', name: 'Statics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 035', name: 'Statics' } },
+      { code: 'COMM C1000', name: 'Introduction to Public Speaking', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CMN 001', name: 'Introduction to Public Speaking' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022A', name: 'Linear Algebra' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022B', name: 'Differential Equations' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MAT 021C/D Series', satisfies: { code: 'MAT 021C', name: 'Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MAT 021C/D Series', satisfies: { code: 'MAT 021D', name: 'Calculus' } }
+    ]
   }
 ];
