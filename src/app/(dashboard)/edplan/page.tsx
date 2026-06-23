@@ -387,23 +387,25 @@ export default function EdPlanPage() {
                         draggable
                         onDragStart={(e) => handleDragStart(e, course.code, term)}
                         onDragEnd={handleDragEnd}
-                        className={`group relative bg-slate-50 hover:bg-white border rounded-xl p-4 transition-all duration-200 shadow-sm flex flex-col justify-between min-h-[90px] cursor-grab active:cursor-grabbing ${
+                        className={`group relative bg-white border border-slate-200/80 rounded-xl p-4 transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5 cursor-grab active:cursor-grabbing flex flex-col justify-between min-h-[90px] ${
                           isDraggingThis 
                             ? 'opacity-40 border-dashed border-blue-300 scale-[0.98] bg-slate-100/50' 
-                            : 'border-slate-100 hover:border-slate-200'
+                            : course.type === 'Required'
+                              ? 'border-l-4 border-l-blue-600 hover:border-slate-300'
+                              : 'border-l-4 border-l-slate-350 hover:border-slate-300'
                         }`}
                       >
                         <div>
                         <div className="flex items-center justify-between mb-1.5 pr-6">
-                          <span className="font-mono text-xs font-bold text-slate-700 bg-white border border-slate-200/60 px-2 py-0.5 rounded">
+                          <span className="font-mono text-xs font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded">
                             {course.code}
                           </span>
                           {course.type === 'Required' ? (
-                            <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 border border-indigo-100/50 px-2 py-0.5 rounded-full">
+                            <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-200/50 px-2 py-0.5 rounded-full">
                               {t('required')}
                             </span>
                           ) : (
-                            <span className="text-[10px] font-semibold text-slate-600 bg-white border border-slate-200 px-2 py-0.5 rounded-full">
+                            <span className="text-[10px] font-semibold text-slate-550 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
                               {t('recommended')}
                             </span>
                           )}

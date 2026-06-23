@@ -44,6 +44,9 @@ export default function RequirementsPage() {
   // Custom requirements list state loaded from localStorage
   const [customRequirementsList, setCustomRequirementsList] = useState<TransferRequirement[]>([]);
 
+  // Planned course codes loaded from My Ed Plan
+  const [plannedCourseCodes, setPlannedCourseCodes] = useState<string[]>([]);
+
   // PDF uploading and parsing states
   const [isUploading, setIsUploading] = useState(false);
   const [parseError, setParseError] = useState<string | null>(null);
@@ -57,15 +60,26 @@ export default function RequirementsPage() {
   const [editUniv, setEditUniv] = useState('');
   const [editMajor, setEditMajor] = useState('');
 
-  // Load custom requirements list from local storage on mount
+  // Load custom requirements list and planned courses from local storage on mount
   useEffect(() => {
-    const saved = localStorage.getItem('transfumer_custom_requirements_list');
-    if (saved) {
+    const savedCustom = localStorage.getItem('transfumer_custom_requirements_list');
+    if (savedCustom) {
       try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCustomRequirementsList(JSON.parse(saved));
+        setCustomRequirementsList(JSON.parse(savedCustom));
       } catch (e) {
         console.error(e);
+      }
+    }
+
+    const savedPlans = localStorage.getItem('transfumer_plans');
+    if (savedPlans) {
+      try {
+        const plans = JSON.parse(savedPlans);
+        const codes = Object.values(plans)
+          .flatMap((courses: any) => courses.map((c: any) => c.code.toUpperCase()));
+        setPlannedCourseCodes(codes);
+      } catch (e) {
+        console.error('Failed to parse plans', e);
       }
     }
   }, []);
@@ -359,7 +373,7 @@ export default function RequirementsPage() {
 
   // Statistics calculations
   const stats = useMemo(() => {
-    if (!combinedRequirement) return { total: 0, required: 0, recommended: 0 };
+    if (!combinedRequirement) return { total: 0, required: 0, recommended: 0, plannedTotal: 0, plannedRequired: 0, plannedRecommended: 0 };
     const courses = combinedRequirement.courses;
     
     // For courses belonging to an orGroup, only count the ones belonging to the selected option
@@ -393,12 +407,20 @@ export default function RequirementsPage() {
     const required = activeCourses.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
     const recommended = activeCourses.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
     
+    // Calculate planned units
+    const plannedActive = activeCourses.filter(c => plannedCourseCodes.includes(c.code.toUpperCase()));
+    const plannedRequired = plannedActive.filter(c => c.type === 'Required').reduce((sum, c) => sum + c.units, 0);
+    const plannedRecommended = plannedActive.filter(c => c.type === 'Recommended').reduce((sum, c) => sum + c.units, 0);
+    
     return {
       total: required + recommended,
       required,
-      recommended
+      recommended,
+      plannedTotal: plannedRequired + plannedRecommended,
+      plannedRequired,
+      plannedRecommended
     };
-  }, [combinedRequirement, renderedItems, selectedOrCourses]);
+  }, [combinedRequirement, renderedItems, selectedOrCourses, plannedCourseCodes]);
 
   // Look up course in local catalog database
   const getCatalogCourse = (code: string) => {
@@ -526,9 +548,9 @@ export default function RequirementsPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto w-full space-y-8 animate-fadeIn">
+    <div className="max-w-6xl mx-auto w-full space-y-8 animate-fadeIn">
       {/* Page Header */}
-      <header className="pb-6 border-b border-slate-200/80">
+      <header className="pb-6 border-b border-slate-100">
         <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
           {t('reqTitle')}
         </h1>
@@ -538,7 +560,7 @@ export default function RequirementsPage() {
       </header>
 
       {/* Selections Panel */}
-      <section className="bg-white border border-slate-200/60 p-6 rounded-2xl shadow-sm space-y-6">
+      <section className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-6">
         {/* College Selector */}
         <div className="max-w-xs">
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
@@ -704,7 +726,7 @@ export default function RequirementsPage() {
 
       {/* Main Requirement Area */}
       {combinedRequirement && combinedRequirement.courses.length > 0 ? (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
           {/* List Section (Left/Middle) */}
           <div className="lg:col-span-2 space-y-6">
             {/* Filter toolbar */}
@@ -728,35 +750,36 @@ export default function RequirementsPage() {
                 renderedItems.map((item) => {
                   if (item.type === 'single') {
                     const course = item.course;
+                    const isPlanned = plannedCourseCodes.includes(course.code.toUpperCase());
                     return (
                       <div 
                         key={course.code}
-                        className={`group border p-5 rounded-2xl shadow-sm hover:shadow-md hover:border-slate-300/60 transition-all duration-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
-                          course.isOverlap 
-                            ? 'bg-gradient-to-r from-indigo-50/40 to-blue-50/20 border-indigo-200/80 hover:border-indigo-300/80 shadow-indigo-50/10' 
-                            : 'bg-white border-slate-200/60'
+                        className={`group border border-slate-100 p-5 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${
+                          isPlanned
+                            ? 'bg-emerald-50/5 border-emerald-100/60 shadow-emerald-500/5'
+                            : 'bg-white'
                         }`}
                       >
-                        <div className="space-y-1.5 flex-1">
+                        <div className="space-y-1 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="font-mono font-bold text-slate-800 bg-slate-100/80 px-2.5 py-1 rounded-lg text-xs tracking-wider">
+                            <span className="font-mono font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg text-xs tracking-wider">
                               {course.code}
                             </span>
                             
                             {/* Required/Recommended badges */}
                             {course.type === 'Required' ? (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm shadow-blue-500/10">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/50">
                                 {t('required')}
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-550 border border-slate-200">
                                 {t('recommended')}
                               </span>
                             )}
 
                             {/* Overlap badge */}
                             {course.isOverlap && (
-                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-sm shadow-indigo-500/10">
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-550 text-white shadow-sm shadow-emerald-500/10">
                                 <Sparkles className="h-3 w-3" />
                                 <span>{t('doubleCounted')}</span>
                               </span>
@@ -768,12 +791,19 @@ export default function RequirementsPage() {
                                 🎓 Satisfies: {course.satisfies.code}
                               </span>
                             )}
+
+                            {/* Planned badge */}
+                            {isPlanned && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-250">
+                                ✓ {language === 'ja' ? '計画済み' : 'Planned'}
+                              </span>
+                            )}
                           </div>
-                          <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors text-base pt-1">
+                          <h3 className="text-base font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
                             {course.name}
                           </h3>
                           {/* Target requirements badges */}
-                          <div className="flex flex-wrap gap-1.5 pt-1.5">
+                          <div className="flex flex-wrap gap-1.5 pt-1">
                             {course.sources?.map((src, sIdx) => {
                               const isBerkeley = src.university.includes('Berkeley');
                               return (
@@ -791,7 +821,7 @@ export default function RequirementsPage() {
                             })}
                           </div>
                           {course.description && (
-                            <p className="text-xs text-slate-400 pt-1 line-clamp-1 group-hover:line-clamp-none transition-all duration-300 leading-relaxed">
+                            <p className="text-[11px] text-slate-500/90 mt-1.5 line-clamp-1 group-hover:line-clamp-none transition-all duration-300 leading-relaxed">
                               {course.description}
                             </p>
                           )}
@@ -801,8 +831,12 @@ export default function RequirementsPage() {
                           <span className="text-sm font-semibold text-slate-500">
                             {course.units.toFixed(1)} {t('unitsLabel')}
                           </span>
-                          <div className="h-6 w-6 rounded-full bg-slate-50 flex items-center justify-center text-slate-300">
-                            <CheckCircle className="h-5 w-5" />
+                          <div className={`h-7 w-7 rounded-full flex items-center justify-center transition-all ${
+                            isPlanned
+                              ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/20'
+                              : 'bg-slate-50 text-slate-300 border border-slate-200/30'
+                          }`}>
+                            <CheckCircle className="h-4.5 w-4.5" />
                           </div>
                         </div>
                       </div>
@@ -813,10 +847,10 @@ export default function RequirementsPage() {
                     return (
                       <div 
                         key={targetCourse.code}
-                        className="bg-white border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden"
+                        className="bg-white border border-slate-100 rounded-2xl shadow-sm overflow-hidden"
                       >
                         {/* Target Course Header */}
-                        <div className="bg-slate-50/80 border-b border-slate-100 p-4 flex items-center justify-between">
+                        <div className="bg-slate-50/50 border-b border-slate-100 p-4 flex items-center justify-between">
                           <div className="flex items-center gap-2">
                             <span className="px-2 py-0.5 bg-blue-100 text-blue-800 rounded-md font-mono text-[10px] font-bold">
                               UCB {targetCourse.code}
@@ -825,45 +859,60 @@ export default function RequirementsPage() {
                               {targetCourse.name}
                             </span>
                           </div>
-                          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
+                          <span className="text-[10px] text-slate-450 font-semibold uppercase tracking-wider">
                             Satisfies Requirement
                           </span>
                         </div>
 
                         {/* List of De Anza courses connected by AND */}
                         <div className="p-4 space-y-3">
-                          {courses.map((course, idx) => (
-                            <div key={course.code} className="space-y-3">
-                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                                <div className="space-y-1.5 flex-1">
-                                  <div className="flex flex-wrap items-center gap-2">
-                                    <span className="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px]">
-                                      {course.code}
-                                    </span>
-                                    {course.type === 'Required' ? (
-                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
-                                        {t('required')}
+                          {courses.map((course, idx) => {
+                            const isSubPlanned = plannedCourseCodes.includes(course.code.toUpperCase());
+                            return (
+                              <div key={course.code} className="space-y-3">
+                                <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-3 rounded-xl border border-slate-100 ${
+                                  isSubPlanned
+                                    ? 'bg-emerald-50/5 border-emerald-100/60 shadow-emerald-500/5'
+                                    : 'bg-white'
+                                }`}>
+                                  <div className="space-y-1 flex-1">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="font-mono font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded text-[10px]">
+                                        {course.code}
                                       </span>
-                                    ) : (
-                                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
-                                        {t('recommended')}
-                                      </span>
+                                      {course.type === 'Required' ? (
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/50">
+                                          {t('required')}
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-550 border border-slate-200">
+                                          {t('recommended')}
+                                        </span>
+                                      )}
+                                      {isSubPlanned && (
+                                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-250">
+                                          ✓ {language === 'ja' ? '計画済み' : 'Planned'}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <h4 className="text-sm font-semibold text-slate-900">{course.name}</h4>
+                                    {course.description && (
+                                      <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{course.description}</p>
                                     )}
                                   </div>
-                                  <h4 className="font-bold text-sm text-slate-900">{course.name}</h4>
-                                  {course.description && (
-                                    <p className="text-xs text-slate-400 leading-relaxed">{course.description}</p>
-                                  )}
-                                </div>
-                                <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                                  <span className="text-xs font-semibold text-slate-500">
-                                    {course.units.toFixed(1)} {t('unitsLabel')}
-                                  </span>
-                                  <div className="h-5 w-5 rounded-full bg-slate-50 flex items-center justify-center text-slate-300">
-                                    <CheckCircle className="h-4.5 w-4.5" />
+                                  <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                                    <span className="text-xs font-semibold text-slate-500">
+                                      {course.units.toFixed(1)} {t('unitsLabel')}
+                                    </span>
+                                    <div className={`h-6 w-6 rounded-full flex items-center justify-center transition-all ${
+                                      isSubPlanned
+                                        ? 'bg-emerald-500 text-white shadow-sm'
+                                        : 'bg-slate-50 text-slate-350 border border-slate-200/30'
+                                    }`}>
+                                      <CheckCircle className="h-4 w-4" />
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
 
                               {idx < courses.length - 1 && (
                                 <div className="relative py-1 flex items-center justify-center">
@@ -876,7 +925,8 @@ export default function RequirementsPage() {
                                 </div>
                               )}
                             </div>
-                          ))}
+                          );
+                        })}
                         </div>
                       </div>
                     );
@@ -896,19 +946,19 @@ export default function RequirementsPage() {
                     return (
                       <div 
                         key={groupName}
-                        className="bg-gradient-to-br from-slate-50/80 to-indigo-50/10 border border-dashed border-indigo-200/80 p-6 rounded-2xl shadow-sm space-y-4"
+                        className="bg-slate-50/50 border border-slate-200/80 p-6 rounded-2xl shadow-sm space-y-4"
                       >
                         {/* Group Header */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">
-                            <span className="p-1 bg-indigo-100 text-indigo-700 rounded-lg">
-                              <Sparkles className="h-4 w-4 text-indigo-600" />
+                            <span className="p-1 bg-slate-200/80 text-slate-700 rounded-lg">
+                              <Sparkles className="h-4 w-4 text-slate-650" />
                             </span>
-                            <span className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
                               {t('completeOneOption')}
                             </span>
                           </div>
-                          <span className="px-2 py-0.5 bg-indigo-50 border border-indigo-100 rounded-full text-[10px] font-bold text-indigo-600">
+                          <span className="px-2 py-0.5 bg-slate-200/60 border border-slate-300/40 rounded-full text-[10px] font-bold text-slate-600">
                             {groupName}
                           </span>
                         </div>
@@ -918,15 +968,22 @@ export default function RequirementsPage() {
                           {options.map((option, idx) => {
                             const optionId = getOptionId(option);
                             const isSelected = optionId === selectedId;
+                            const isOptionPlanned = option.type === 'single' 
+                              ? plannedCourseCodes.includes(option.course.code.toUpperCase()) 
+                              : option.type === 'andGroup' 
+                                ? option.courses.every(c => plannedCourseCodes.includes(c.code.toUpperCase())) 
+                                : false;
 
                             return (
                               <div key={optionId} className="space-y-3">
                                 <div 
                                   onClick={() => setSelectedOrCourses(prev => ({ ...prev, [groupName]: optionId }))}
-                                  className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 space-y-3 ${
+                                  className={`p-5 rounded-xl border cursor-pointer transition-all duration-200 space-y-3 shadow-sm ${
                                     isSelected 
-                                      ? 'bg-white border-indigo-500 shadow-md shadow-indigo-500/5 ring-1 ring-indigo-500' 
-                                      : 'bg-white/60 border-slate-200/70 opacity-60 hover:opacity-100 hover:border-slate-300'
+                                      ? isOptionPlanned
+                                        ? 'bg-emerald-50/5 border-emerald-400'
+                                        : 'bg-white border-slate-800' 
+                                      : 'bg-white border-slate-100 opacity-65 hover:opacity-100 hover:border-slate-200'
                                   }`}
                                 >
                                   {/* Radio indicator and Option Title */}
@@ -934,10 +991,16 @@ export default function RequirementsPage() {
                                     <div className="pt-0.5 shrink-0">
                                       <div className={`h-4.5 w-4.5 rounded-full border flex items-center justify-center transition-all ${
                                         isSelected 
-                                          ? 'border-indigo-600 bg-indigo-50' 
-                                          : 'border-slate-300 bg-white'
+                                          ? isOptionPlanned
+                                            ? 'border-emerald-550 bg-emerald-50'
+                                            : 'border-slate-800 bg-slate-50' 
+                                          : 'border-slate-350 bg-white'
                                       }`}>
-                                        {isSelected && <div className="h-2 w-2 rounded-full bg-indigo-600" />}
+                                        {isSelected && (
+                                          <div className={`h-2.5 w-2.5 rounded-full ${
+                                            isOptionPlanned ? 'bg-emerald-550' : 'bg-slate-800'
+                                          }`} />
+                                        )}
                                       </div>
                                     </div>
 
@@ -950,11 +1013,11 @@ export default function RequirementsPage() {
                                               {option.course.code}
                                             </span>
                                             {option.course.type === 'Required' ? (
-                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/50">
                                                 {t('required')}
                                               </span>
                                             ) : (
-                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-100/50">
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-slate-50 text-slate-550 border border-slate-200">
                                                 {t('recommended')}
                                               </span>
                                             )}
@@ -963,14 +1026,21 @@ export default function RequirementsPage() {
                                                 🎓 Satisfies: {option.course.satisfies.code}
                                               </span>
                                             )}
+                                            {isOptionPlanned && (
+                                              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-250">
+                                                ✓ {language === 'ja' ? '計画済み' : 'Planned'}
+                                              </span>
+                                            )}
                                           </div>
-                                          <h4 className={`font-bold text-sm transition-colors ${
-                                            isSelected ? 'text-indigo-900' : 'text-slate-700'
+                                          <h4 className={`text-sm font-semibold transition-colors ${
+                                            isSelected 
+                                              ? isOptionPlanned ? 'text-emerald-900' : 'text-slate-900' 
+                                              : 'text-slate-700'
                                           }`}>
                                             {option.course.name}
                                           </h4>
                                           {option.course.description && (
-                                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                                            <p className="text-[11px] text-slate-550 mt-1 leading-relaxed">
                                               {option.course.description}
                                             </p>
                                           )}
@@ -989,7 +1059,7 @@ export default function RequirementsPage() {
                                           </div>
 
                                           {/* Nested De Anza courses */}
-                                          <div className="space-y-2.5 bg-slate-50/50 p-3 rounded-lg border border-slate-100">
+                                          <div className="space-y-2.5 bg-slate-50/30 p-3 rounded-xl border border-slate-100">
                                             {option.courses.map((subC, subIdx) => (
                                               <div key={subC.code} className="space-y-2.5">
                                                 <div className="flex items-center justify-between gap-3 text-xs">
@@ -1030,13 +1100,13 @@ export default function RequirementsPage() {
                                               🏫 {t('takeAtUniv')}
                                             </span>
                                           </div>
-                                          <h4 className={`font-bold text-sm transition-colors ${
+                                          <h4 className={`text-sm font-semibold transition-colors ${
                                             isSelected ? 'text-indigo-900' : 'text-slate-700'
                                           }`}>
                                             {option.name}
                                           </h4>
                                           {option.description && (
-                                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                                            <p className="text-[11px] text-slate-500/90 mt-1 leading-relaxed">
                                               {option.description}
                                             </p>
                                           )}
@@ -1088,7 +1158,7 @@ export default function RequirementsPage() {
           {/* Stats & Summary Sidebar (Right Panel) */}
           <div className="space-y-6">
             {/* Stats Card */}
-            <div className="bg-white border border-slate-200/60 p-6 rounded-2xl shadow-sm space-y-6">
+            <div className="bg-white border border-slate-100 p-6 rounded-2xl shadow-sm space-y-6">
               <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-blue-600" />
                 <span>{t('summaryTitle')}</span>
@@ -1097,55 +1167,55 @@ export default function RequirementsPage() {
               <div className="space-y-4">
                 <div className="flex justify-between items-center text-sm font-medium text-slate-500">
                   <span>{t('requiredTotal')}</span>
-                  <span className="font-semibold text-slate-800">{stats.required.toFixed(1)} {t('unitsLabel')}</span>
+                  <span className="font-semibold text-slate-800">{stats.plannedRequired.toFixed(1)} / {stats.required.toFixed(1)} {t('unitsLabel')}</span>
                 </div>
                 <div className="flex justify-between items-center text-sm font-medium text-slate-500">
                   <span>{t('recommendedTotal')}</span>
-                  <span className="font-semibold text-slate-800">{stats.recommended.toFixed(1)} {t('unitsLabel')}</span>
+                  <span className="font-semibold text-slate-800">{stats.plannedRecommended.toFixed(1)} / {stats.recommended.toFixed(1)} {t('unitsLabel')}</span>
                 </div>
                 <div className="border-t border-slate-100 pt-4 flex justify-between items-center text-base font-bold text-slate-900">
                   <span>{t('totalUnits')}</span>
-                  <span className="text-blue-600">{stats.total.toFixed(1)} {t('unitsLabel')}</span>
+                  <span className="text-slate-950">{stats.plannedTotal.toFixed(1)} / {stats.total.toFixed(1)} {t('unitsLabel')}</span>
                 </div>
               </div>
 
               {/* Progress visualizer */}
               <div className="space-y-2 pt-2">
-                <div className="flex justify-between text-xs font-semibold text-slate-400">
-                  <span>{t('requiredRatio')}</span>
-                  <span>{stats.total > 0 ? Math.round((stats.required / stats.total) * 100) : 0}%</span>
+                <div className="flex justify-between text-xs font-bold text-slate-550">
+                  <span>{language === 'ja' ? '現在の計画進捗' : 'Current Plan Progress'}</span>
+                  <span>{stats.total > 0 ? Math.round((stats.plannedTotal / stats.total) * 100) : 0}%</span>
                 </div>
-                <div className="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden flex">
+                <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden flex shadow-inner">
                   <div 
-                    className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full" 
-                    style={{ width: `${stats.total > 0 ? (stats.required / stats.total) * 100 : 0}%` }}
+                    className="bg-gradient-to-r from-blue-600 to-indigo-600 h-full rounded-full transition-all duration-300" 
+                    style={{ width: `${stats.total > 0 ? (stats.plannedTotal / stats.total) * 100 : 0}%` }}
                   />
                 </div>
               </div>
             </div>
 
             {/* Hint Box */}
-            <div className="bg-blue-50/50 border border-blue-100/50 p-5 rounded-2xl flex gap-3">
-              <Info className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-blue-700 leading-relaxed font-medium space-y-1">
-                <p className="font-semibold">{t('legendTitle')}</p>
-                <p>・<span className="font-bold text-indigo-800">{t('required')}</span>: {t('legendRequired')}</p>
-                <p>・<span className="font-bold text-sky-800">{t('recommended')}</span>: {t('legendRecommended')}</p>
+            <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex gap-3 shadow-sm">
+              <Info className="h-5 w-5 text-slate-500 shrink-0 mt-0.5" />
+              <div className="text-xs text-slate-600 leading-relaxed font-medium space-y-1.5">
+                <p className="font-bold text-slate-800">{t('legendTitle')}</p>
+                <p>・<span className="font-bold text-blue-700">{t('required')}</span>: {t('legendRequired')}</p>
+                <p>・<span className="font-bold text-slate-500">{t('recommended')}</span>: {t('legendRecommended')}</p>
               </div>
             </div>
 
             {/* Assist.org Verification Card */}
-            <div className="bg-emerald-50/40 border border-emerald-100/60 p-5 rounded-2xl flex gap-3">
+            <div className="bg-slate-50 border border-slate-100 p-5 rounded-2xl flex gap-3 shadow-sm">
               <Sparkles className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
-              <div className="text-xs text-emerald-800 leading-relaxed font-medium space-y-1">
-                <p className="font-bold text-emerald-950">{t('assistSourceTitle')}</p>
+              <div className="text-xs text-slate-600 leading-relaxed font-medium space-y-1.5">
+                <p className="font-bold text-slate-800">{t('assistSourceTitle')}</p>
                 <p className="text-slate-500">{t('assistSourceDesc')}</p>
                 <div className="pt-1">
                   <a 
                     href="https://assist.org" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="inline-flex items-center text-[10px] font-bold text-emerald-700 hover:text-emerald-950 hover:underline gap-0.5 bg-emerald-100/60 px-2 py-0.5 rounded transition-all"
+                    className="inline-flex items-center text-[10px] font-bold text-slate-700 hover:text-slate-900 hover:underline gap-0.5 bg-slate-200/60 px-2 py-0.5 rounded transition-all"
                   >
                     Official ASSIST.org ↗
                   </a>

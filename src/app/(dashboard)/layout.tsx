@@ -127,16 +127,16 @@ function DashboardLayoutContent({
                 href={item.path}
                 onClick={() => setIsMobileOpen(false)}
                 className={`
-                  flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-150 group
+                  flex items-center space-x-3 py-3 rounded-r-xl transition-all duration-150 group font-semibold text-sm
                   ${isActive 
-                    ? 'bg-blue-50 text-blue-600' 
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-slate-50'
+                    ? 'bg-slate-100 text-slate-900 border-l-4 border-l-blue-600 pl-3 -ml-4 shadow-sm' 
+                    : 'text-slate-650 hover:text-slate-900 hover:bg-slate-50/70 pl-4'
                   }
                 `}
               >
                 <IconComponent className={`
                   h-5 w-5 transition-colors duration-150
-                  ${isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'}
+                  ${isActive ? 'text-blue-650' : 'text-slate-400 group-hover:text-slate-600'}
                 `} />
                 <span>{t(item.nameKey)}</span>
               </Link>
