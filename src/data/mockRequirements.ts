@@ -1362,5 +1362,33 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'Classical Physics A', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
       { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', orGroup: 'Classical Physics B', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Chemical Engineering B.S.',
+    courses: [
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022A', name: 'Linear Algebra' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022B', name: 'Differential Equations' } },
+      { code: 'ENGR 37', name: 'Introduction to Circuit Analysis', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 017', name: 'Circuits I' } },
+      { code: 'ENGR 35', name: 'Statics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 035', name: 'Statics' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHE 002C', name: 'General Chemistry' } },
+      { code: 'ELIT 39', name: 'Contemporary Literature', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'COM 004', name: 'Major Works of the Contemporary World' } },
+      { code: 'NAIS 15', name: 'Ethnic Studies and Native American Literature', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'NAS 005', name: 'Introduction to Native American Literature' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'UWP 001 Selection', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'ENL 003 Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'ENL 003 Selection', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009C', name: 'Classical Physics' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } },
+      { code: 'CHEM 12A', name: 'Organic Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHE 129A', name: 'Organic Chemistry Laboratory' } },
+      { code: 'CIS 41A', name: 'Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Programming Selection', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } },
+      { code: 'CIS 36A', name: 'Introduction to Computer Programming Using Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'Programming Selection', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } }
+    ]
   }
 ];
