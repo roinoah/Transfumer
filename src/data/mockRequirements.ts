@@ -1636,5 +1636,39 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
       { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6A', name: 'General Chemistry I' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'ECE: Electrical Engineering and Society B.A.',
+    courses: [
+      { code: 'SOC 1', name: 'Introduction to Sociology', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'SOCI 1', name: 'Introduction to Sociology' } },
+      { code: 'SOC 20', name: 'Social Problems', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'SOCI 2', name: 'The Study of Society' } },
+      { code: 'ECON 2', name: 'Principles of Microeconomics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECON 1', name: 'Principles of Microeconomics' } },
+      { code: 'ACCT 1A', name: 'Financial Accounting I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ECON 4', name: 'Financial Accounting' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Vector Calculus and Geometry', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Vector Calculus and Geometry', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus for Science and Engineering Geometry', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'Calculus for Science and Engineering Geometry', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } },
+      { code: 'PHYS 4D', name: 'Physics for Scientists and Engineers: Modern Physics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2D', name: 'Physics - Relativity and Quantum Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'ASAM 10', name: 'Contemporary Asian American Communities', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Race Ethnicity A', satisfies: { code: 'HILD 7B', name: 'Race and Ethnicity in the United States' } },
+      { code: 'ASAM 1', name: 'Asian American Experiences Past to Present', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Race Ethnicity A', satisfies: { code: 'HILD 7B', name: 'Race and Ethnicity in the United States' } },
+      { code: 'ASAM 42A', name: 'History of Asian Civilization: China and Japan (to the 19th Century)', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'HILD 11', name: 'East Asia and the West' } },
+      { code: 'AFAM 12B', name: 'African American History Since 1865', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Race Ethnicity B', satisfies: { code: 'HILD 7A', name: 'Race and Ethnicity in the United States' } },
+      { code: 'AFAM 12A', name: 'African American History to 1865', units: 4.0, type: 'Required', category: 'MajorPrep', orGroup: 'Race Ethnicity B', satisfies: { code: 'HILD 7A', name: 'Race and Ethnicity in the United States' } },
+      { code: 'ASAM 42A', name: 'History of Asian Civilization: China and Japan (to the 19th Century)', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'HILD 10', name: 'East Asia: The Great Tradition' } },
+      { code: 'POLI 5', name: 'Introduction to Political Thought and Theory', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 13', name: 'Power and Justice' } },
+      { code: 'POLI 3', name: 'International Relations', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 12', name: 'Introduction to Political Science: International Relations' } },
+      { code: 'POLS C1000', name: 'American Government and Politics', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 10', name: 'Introduction to Political Science: American Politics' } },
+      { code: 'POLI 2', name: 'Comparative Politics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 11', name: 'Introduction to Political Science: Comparative Politics' } }
+    ]
   }
 ];
