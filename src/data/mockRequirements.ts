@@ -1670,5 +1670,30 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'POLS C1000', name: 'American Government and Politics', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 10', name: 'Introduction to Political Science: American Politics' } },
       { code: 'POLI 2', name: 'Comparative Politics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'POLI 11', name: 'Introduction to Political Science: Comparative Politics' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC San Diego',
+    major: 'Chemical and Nano Engineering: Chemical Engineering B.S.',
+    courses: [
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'CHEM 7L Selection', satisfies: { code: 'CHEM 7L', name: 'Introductory Inorganic Chemistry Laboratory' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'CHEM 7L Selection', satisfies: { code: 'CHEM 7L', name: 'Introductory Inorganic Chemistry Laboratory' } },
+      { code: 'CHEM 1A', name: 'General Chemistry I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6A', name: 'General Chemistry I' } },
+      { code: 'CHEM 1B', name: 'General Chemistry II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6B', name: 'General Chemistry II' } },
+      { code: 'CHEM 1C', name: 'General Chemistry III', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'CHEM 6C', name: 'General Chemistry III' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2C', name: 'Physics - Fluids, Waves, Thermodynamics, and Optics' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2A', name: 'Physics - Mechanics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2CL', name: 'Physics Laboratory - Electricity and Magnetism' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHYS 2B', name: 'Physics - Electricity and Magnetism' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20B', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 18', name: 'Linear Algebra' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20A', name: 'Calculus for Science and Engineering' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MATH 20D', name: 'Introduction to Differential Equations' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 20C/E Selection', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 20C/E Selection', satisfies: { code: 'MATH 20C', name: 'Calculus and Analytic Geometry for Science and Engineering' } },
+      { code: 'MATH 1C', name: 'Calculus III', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 20E Selection', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } },
+      { code: 'MATH 1D', name: 'Calculus IV', units: 5.0, type: 'Required', category: 'MajorPrep', orGroup: 'MATH 20E Selection', satisfies: { code: 'MATH 20E', name: 'Vector Calculus' } }
+    ]
   }
 ];
