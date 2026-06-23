@@ -1264,5 +1264,33 @@ export const mockRequirements: TransferRequirement[] = [
       { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
       { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } }
     ]
+  },
+
+  {
+    fromCollege: 'De Anza College',
+    toUniversity: 'UC Davis',
+    major: 'Civil Engineering B.S.',
+    courses: [
+      { code: 'MATH 2B', name: 'Linear Algebra', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022A', name: 'Linear Algebra' } },
+      { code: 'MATH 2A', name: 'Differential Equations', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 022B', name: 'Differential Equations' } },
+      { code: 'ENGR 35', name: 'Statics', units: 4.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'ENG 035', name: 'Statics' } },
+      { code: 'ELIT 39', name: 'Contemporary Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'COM 004', name: 'Major Works of the Contemporary World' } },
+      { code: 'NAIS 15', name: 'Ethnic Studies and Native American Literature', units: 4.0, type: 'Required', category: 'IGETC', satisfies: { code: 'NAS 005', name: 'Introduction to Native American Literature' } },
+      { code: 'EWRT 1C', name: 'Literature and Composition', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'ENL 003 Equivalents', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'ENL 003 Equivalents', satisfies: { code: 'ENL 003', name: 'Introduction to Literature' } },
+      { code: 'COMM 9', name: 'Argumentation: Analysis of Oral and Written Communication', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Equivalents', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ENGL C1000', name: 'Academic Reading and Writing', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Equivalents', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'EWRT 1B', name: 'Reading, Writing and Research', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Equivalents', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'ESL 5', name: 'Advanced Composition and Reading', units: 5.0, type: 'Required', category: 'IGETC', orGroup: 'UWP 001 Equivalents', satisfies: { code: 'UWP 001', name: 'Introduction to Academic Literacies' } },
+      { code: 'BIOL 6B', name: 'Cell and Molecular Biology', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIS 002A', name: 'Introduction to Biology: Essentials of Life on Earth' } },
+      { code: 'BIOL 6C', name: 'Ecology and Evolution', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'BIS 002B', name: 'Introduction to Biology: Principles of Ecology & Evolution' } },
+      { code: 'CIS 41A', name: 'Python Programming', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 032A Equivalents', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } },
+      { code: 'CIS 36A', name: 'Introduction to Computer Programming Using Java', units: 4.5, type: 'Required', category: 'MajorPrep', orGroup: 'ECS 032A Equivalents', satisfies: { code: 'ECS 032A', name: 'Introduction to Programming' } },
+      { code: 'PHYS 4A', name: 'Physics for Scientists and Engineers: Mechanics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009A', name: 'Classical Physics' } },
+      { code: 'PHYS 4B', name: 'Physics for Scientists and Engineers: Electricity and Magnetism', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009C', name: 'Classical Physics' } },
+      { code: 'PHYS 4C', name: 'Physics for Scientists and Engineers: Fluids, Waves, Optics and Thermodynamics', units: 6.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'PHY 009B', name: 'Classical Physics' } },
+      { code: 'MATH 1A', name: 'Calculus I', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021A', name: 'Calculus' } },
+      { code: 'MATH 1B', name: 'Calculus II', units: 5.0, type: 'Required', category: 'MajorPrep', satisfies: { code: 'MAT 021B', name: 'Calculus' } }
+    ]
   }
 ];
