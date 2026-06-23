@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "import-pdfs": "tsx scripts/import-pdfs.ts"
+    "import-pdfs": "tsx scripts/import-pdfs.ts",
+    "import-urls": "tsx scripts/import-urls.ts"
   },
   "dependencies": {
     "lucide-react": "^1.18.0",

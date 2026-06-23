@@ -1,0 +1,3 @@
+# Add one Assist.org PDF URL per line here.
+# Example:
+# https://transfer.assist.org/api/agreements/123456/pdf
