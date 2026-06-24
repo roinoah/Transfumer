@@ -366,8 +366,32 @@ export default function RequirementsPage() {
       });
     });
 
-    // 4. Sort items by originalIndex
-    items.sort((a, b) => a.originalIndex - b.originalIndex);
+    // Helper to determine if a render item is Required
+    const isItemRequired = (item: RenderItem) => {
+      if (item.type === 'single') {
+        return item.course.type === 'Required';
+      }
+      if (item.type === 'andGroup') {
+        return item.courses.some(c => c.type === 'Required');
+      }
+      if (item.type === 'orGroup') {
+        return item.options.some(opt => {
+          if (opt.type === 'single') return opt.course.type === 'Required';
+          if (opt.type === 'andGroup') return opt.courses.some(c => c.type === 'Required');
+          return false;
+        });
+      }
+      return false;
+    };
+
+    // 4. Sort items: Required first, then Recommended. Preserve original order within each category.
+    items.sort((a, b) => {
+      const reqA = isItemRequired(a);
+      const reqB = isItemRequired(b);
+      if (reqA && !reqB) return -1;
+      if (!reqA && reqB) return 1;
+      return a.originalIndex - b.originalIndex;
+    });
     return items;
   }, [filteredCourses]);
 
